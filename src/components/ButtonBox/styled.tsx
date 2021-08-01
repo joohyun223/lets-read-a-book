@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const ButtonWrap = styled.div`
-background-color: green;
+	background-color: green;
 `;
 
 export const Button = styled.button`
