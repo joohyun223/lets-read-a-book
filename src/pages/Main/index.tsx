@@ -1,41 +1,76 @@
-import { List, ListItem } from '@material-ui/core';
-import { useEffect, useState } from 'react';
-import BookBox from '../../components/BookBox';
+import React, { Suspense, useEffect, useState } from 'react';
 import axios from 'axios';
+import { Grid, List, ListItem } from '@material-ui/core';
+import { Skeleton, Pagination } from '@material-ui/lab';
+import SearchBox from '../../components/searchBox';
 
+const BookBox = React.lazy(() => import('../../components/BookBox'));
+const startNum = 5;
+const endNum = 14;
 export default function Main(): JSX.Element {
 	const [bookDatas, setBookDatas] = useState<[]>([]);
-
 	useEffect(() => {
-		axios
-			.get(
-				'https://sheets.googleapis.com/v4/spreadsheets/1LoqqwPfIEcYXsMpS7WU_bj8q7tkMaWVmHSM3gbikbvc/values/도서목록 원본!A5:L100?key=AIzaSyDKCH_qtq0fekVfZ6TuD7pSsV9Vl6HOwCU',
-			)
-			.then(res => {
-				setBookDatas(res.data.values);
-			});
+		const fetchBooKData = async () => {
+			const rBookData = await axios.get(
+				`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_RBOOK_LIST_KEY}/values/${process.env.REACT_APP_RBOOK_SHEET_NAME}!A${startNum}:L${endNum}?key=${process.env.REACT_APP_GOOGLE_KEY}`,
+			);
+			setBookDatas(rBookData.data.values);
+			// setBookDatas(prevData => prevData.concat(rBookData.data.values));
+		};
+		fetchBooKData();
 	}, []);
 
 	return (
 		<>
+			<SearchBox />
+			<div style={{ display: 'flex', justifyContent: 'center' }}>
+				<Pagination count={10} color="primary" />
+			</div>
 			<ul>
 				{bookDatas.map((data, i) => {
 					return (
-						<List>
+						<List key={i}>
 							<ListItem>
-								<BookBox
-									num={i + 1}
-									imgUrl="https://bookthumb-phinf.pstatic.net/cover/112/133/11213313.jpg?type=m1&amp;udate=20190710"
-									pNum={data[10]}
-									sub={data[2]}
-									lender={data[11]}
-									isbn={data[4]}
-								></BookBox>
+								<Suspense
+									fallback={
+										<Grid container direction="row" spacing={3}>
+											<Grid item xs={1}>
+												<Skeleton variant="circle" width={20} height={20} />
+											</Grid>
+
+											<Grid item xs={2} className="Thumb">
+												<Skeleton variant="rect" width={82} height={105} />
+											</Grid>
+
+											<Grid item xs={7} className="bookDataWrap" style={{ textAlign: 'left' }}>
+												<Skeleton variant="text" />
+												<Skeleton variant="text" />
+												<Skeleton variant="text" />
+												<Skeleton variant="text" />
+											</Grid>
+
+											<Grid item xs={2}>
+												<Skeleton variant="rect" width={73} height={100} />
+											</Grid>
+										</Grid>
+									}
+								>
+									<BookBox
+										num={i + 1}
+										pNum={data[10]}
+										sub={data[2]}
+										lender={data[11]}
+										isbn={data[4]}
+									></BookBox>
+								</Suspense>
 							</ListItem>
 						</List>
 					);
 				})}
 			</ul>
+			<div style={{ display: 'flex', justifyContent: 'center' }}>
+				<Pagination count={10} color="primary" />
+			</div>
 		</>
 	);
 }

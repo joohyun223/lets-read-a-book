@@ -1,11 +1,9 @@
-import { Thumb, BookDataWrap } from './styled';
-import { Grid, Button } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Grid, Button } from '@material-ui/core';
 
 interface bProps {
 	num: number;
-	imgUrl: string;
 	sub: string;
 	pNum: string;
 	isbn: string;
@@ -18,18 +16,22 @@ export default function BookBox(props: bProps): JSX.Element {
 		margin: 0,
 		overflow: 'hidden',
 	};
-	const [thumbImg, setThumbImg] = useState<string>('');
+	const [thumbImgUrl, setThumbImgUrl] = useState<string>('');
+	const [author, setAuthor] = useState<string>('');
 	useEffect(() => {
 		axios
-			.get(`https://openapi.naver.com/v1/search/book_adv.xml?d_isbn=${props.isbn}`, {
+			.get(`/v1/search/book_adv?d_isbn=${props.isbn}`, {
 				headers: {
-					'Content-Type': 'plain/text',
 					'X-Naver-Client-Id': 'gHXjX2MF9Kazi_iO2TjQ',
 					'X-Naver-Client-Secret': 'dBK5RZuj6V',
 				},
 			})
 			.then(res => {
-				console.log('gldldldld', res);
+				setThumbImgUrl(res.data.items[0].image);
+				setAuthor(res.data.items[0].author);
+			})
+			.catch(error => {
+				setThumbImgUrl('../../../img/noimg.gif');
 			});
 	}, []);
 	return (
@@ -40,13 +42,13 @@ export default function BookBox(props: bProps): JSX.Element {
 
 			<Grid item xs={2} className="Thumb">
 				<a>
-					<img src={props.imgUrl} alt={props.sub} />
+					<img style={{ width: '82px', height: '105px' }} src={thumbImgUrl} alt={props.sub} />
 				</a>
 			</Grid>
 			<Grid item xs={7} className="bookDataWrap" style={{ textAlign: 'left' }}>
 				<dt className="book_title">{props.sub}</dt>
 				<dd style={ddStyle} className="book_author">
-					저자:
+					저자: {author}
 				</dd>
 				<dd style={ddStyle}>
 					<span>관리번호: {props.pNum} </span>
