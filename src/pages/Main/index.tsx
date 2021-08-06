@@ -5,29 +5,41 @@ import { Skeleton, Pagination } from '@material-ui/lab';
 import SearchBox from '../../components/searchBox';
 
 const BookBox = React.lazy(() => import('../../components/BookBox'));
-const startNum = 5;
-const endNum = 14;
+const startNum = 3;
+const endNum = 9999;
 export default function Main(): JSX.Element {
 	const [bookDatas, setBookDatas] = useState<[]>([]);
+	const [pageCount, setPageCount] = useState<number>(1);
+	const [currentPage, setCurrentPage] = useState<number>(1);
+
 	useEffect(() => {
 		const fetchBooKData = async () => {
 			const rBookData = await axios.get(
 				`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_RBOOK_LIST_KEY}/values/${process.env.REACT_APP_RBOOK_SHEET_NAME}!A${startNum}:L${endNum}?key=${process.env.REACT_APP_GOOGLE_KEY}`,
 			);
+
+			setPageCount(Math.ceil(rBookData.data.values.length / 10));
 			setBookDatas(rBookData.data.values);
-			// setBookDatas(prevData => prevData.concat(rBookData.data.values));
 		};
 		fetchBooKData();
 	}, []);
 
+	const pageChanged = (page: number) => {
+		setCurrentPage(page);
+	};
 	return (
 		<>
 			<SearchBox />
 			<div style={{ display: 'flex', justifyContent: 'center' }}>
-				<Pagination count={10} color="primary" />
+				<Pagination
+					count={pageCount}
+					page={currentPage}
+					onChange={(evt, page) => pageChanged(page)}
+					color="primary"
+				/>
 			</div>
 			<ul>
-				{bookDatas.map((data, i) => {
+				{bookDatas.slice((currentPage - 1) * 10, (currentPage - 1) * 10 + 10).map((data, i) => {
 					return (
 						<List key={i}>
 							<ListItem>
@@ -56,7 +68,7 @@ export default function Main(): JSX.Element {
 									}
 								>
 									<BookBox
-										num={i + 1}
+										num={(currentPage - 1) * 10 + i + 1}
 										pNum={data[10]}
 										sub={data[2]}
 										lender={data[11]}
@@ -69,7 +81,12 @@ export default function Main(): JSX.Element {
 				})}
 			</ul>
 			<div style={{ display: 'flex', justifyContent: 'center' }}>
-				<Pagination count={10} color="primary" />
+				<Pagination
+					count={pageCount}
+					color="primary"
+					page={currentPage}
+					onChange={(evt, page) => pageChanged(page)}
+				/>
 			</div>
 		</>
 	);

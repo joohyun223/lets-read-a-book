@@ -33,7 +33,7 @@ export default function BookBox(props: bProps): JSX.Element {
 			.catch(error => {
 				setThumbImgUrl('../../../img/noimg.gif');
 			});
-	}, []);
+	}, [props.isbn]);
 	return (
 		<Grid container direction="row" spacing={3}>
 			<Grid item xs={1}>
