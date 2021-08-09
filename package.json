@@ -18,7 +18,7 @@
 		"web-vitals": "^1.0.1",
 		"yarn": "^1.22.11"
 	},
-	"proxy": "https://openapi.naver.com",
+	"proxy": "https://dapi.kakao.com",
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build",

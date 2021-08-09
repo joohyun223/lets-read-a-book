@@ -20,15 +20,14 @@ export default function BookBox(props: bProps): JSX.Element {
 	const [author, setAuthor] = useState<string>('');
 	useEffect(() => {
 		axios
-			.get(`/v1/search/book_adv?d_isbn=${props.isbn}`, {
+			.get(`/v3/search/book?target=isbn&query=${props.isbn}`, {
 				headers: {
-					'X-Naver-Client-Id': 'gHXjX2MF9Kazi_iO2TjQ',
-					'X-Naver-Client-Secret': 'dBK5RZuj6V',
+					Authorization: process.env.REACT_APP_KAKAO_API_KEY,
 				},
 			})
 			.then(res => {
-				setThumbImgUrl(res.data.items[0].image);
-				setAuthor(res.data.items[0].author);
+				setThumbImgUrl(res.data.documents[0].thumbnail);
+				setAuthor(res.data.documents[0].authors);
 			})
 			.catch(error => {
 				setThumbImgUrl('../../../img/noimg.gif');

@@ -4,19 +4,18 @@ import { Grid, List, ListItem } from '@material-ui/core';
 import { Skeleton, Pagination } from '@material-ui/lab';
 import SearchBox from '../../components/searchBox';
 
-const BookBox = React.lazy(() => import('../../components/BookBox'));
-const startNum = 3;
-const endNum = 9999;
 export default function Main(): JSX.Element {
+	const BookBox = React.lazy(() => import('../../components/BookBox'));
+	const startNum = 3;
+	const endNum = 9999;
+	const sheetsUrl = `https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_RBOOK_LIST_KEY}/values/${process.env.REACT_APP_RBOOK_SHEET_NAME}!A${startNum}:L${endNum}?key=${process.env.REACT_APP_GOOGLE_KEY}`;
 	const [bookDatas, setBookDatas] = useState<[]>([]);
 	const [pageCount, setPageCount] = useState<number>(1);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 
 	useEffect(() => {
 		const fetchBooKData = async () => {
-			const rBookData = await axios.get(
-				`https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_RBOOK_LIST_KEY}/values/${process.env.REACT_APP_RBOOK_SHEET_NAME}!A${startNum}:L${endNum}?key=${process.env.REACT_APP_GOOGLE_KEY}`,
-			);
+			const rBookData = await axios.get(sheetsUrl);
 
 			setPageCount(Math.ceil(rBookData.data.values.length / 10));
 			setBookDatas(rBookData.data.values);
