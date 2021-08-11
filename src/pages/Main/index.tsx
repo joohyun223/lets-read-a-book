@@ -30,20 +30,23 @@ export default function Main(): JSX.Element {
 		setCurrentPage(page);
 	};
 
-	const searchFunc = (searchTxt: string) => {
-		if (searchTxt === '') {
+	const searchFunc = (searchText: string) => {
+		if (searchText === '') {
+			setSearchDatas(['']);
 			setIsSearching(false);
 			setCurrentPage(1);
 			setPageCount(Math.ceil(bookDatas.length / 10));
 			return;
 		}
 
+		const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //특수문자
+		const searchTxt = searchText.replace(regExp, '');
 		const searchType = /^[0-9]{13}$/g.test(searchTxt) ? 'ISBN' : 'OTHERS';
 
 		const searched = bookDatas.filter(data => {
 			return (
 				(searchType === 'ISBN' && data[4] === searchTxt) || //isbn
-				data[2].includes(searchTxt) || //도서명
+				data[2].replace(regExp, '').match(new RegExp(searchTxt, 'gi')) || //도서명
 				data[11].includes(searchTxt) //대여자명
 			);
 		});
