@@ -30,6 +30,7 @@ export default function Main(): JSX.Element {
 		setCurrentPage(page);
 	};
 
+	const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //특수문자
 	const searchFunc = (searchText: string) => {
 		if (searchText === '') {
 			setSearchDatas(['']);
@@ -39,10 +40,8 @@ export default function Main(): JSX.Element {
 			return;
 		}
 
-		const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //특수문자
 		const searchTxt = searchText.replace(regExp, '');
 		const searchType = /^[0-9]{13}$/g.test(searchTxt) ? 'ISBN' : 'OTHERS';
-
 		const searched = bookDatas.filter(data => {
 			return (
 				(searchType === 'ISBN' && data[4] === searchTxt) || //isbn
@@ -61,14 +60,13 @@ export default function Main(): JSX.Element {
 	return (
 		<>
 			<SearchBox goSearch={searchFunc} />
-			<div style={{ display: 'flex', justifyContent: 'center' }}>
-				<Pagination
-					count={pageCount}
-					page={currentPage}
-					onChange={(evt, page) => pageChanged(page)}
-					color="primary"
-				/>
-			</div>
+			<Pagination
+				style={{ display: 'flex', justifyContent: 'center' }}
+				count={pageCount}
+				page={currentPage}
+				onChange={(evt, page) => pageChanged(page)}
+				color="primary"
+			/>
 			<ul>
 				{searchDatas.length === 0 ? (
 					<div>검색 결과가 없습니다 :(</div>
@@ -94,14 +92,13 @@ export default function Main(): JSX.Element {
 						})
 				)}
 			</ul>
-			<div style={{ display: 'flex', justifyContent: 'center' }}>
-				<Pagination
-					count={pageCount}
-					color="primary"
-					page={currentPage}
-					onChange={(evt, page) => pageChanged(page)}
-				/>
-			</div>
+			<Pagination
+				style={{ display: 'flex', justifyContent: 'center' }}
+				count={pageCount}
+				color="primary"
+				page={currentPage}
+				onChange={(evt, page) => pageChanged(page)}
+			/>
 		</>
 	);
 }
