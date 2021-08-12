@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import Main from './pages/Main';
+import AppRouter from './components/Router';
 
 function App(): JSX.Element {
+	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+
+	useEffect(() => {
+		console.log('App mounted');
+	}, []);
 	return (
 		<div className="App">
-			<Main></Main>
+			<AppRouter isLoggedIn={isLoggedIn}></AppRouter>
 		</div>
 	);
 }
