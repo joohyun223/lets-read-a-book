@@ -3,7 +3,7 @@ import axios from 'axios';
 import { List, ListItem } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { BookBoxSeleton } from '../../components/Skeleton';
-import SearchBox from '../../components/searchBox';
+import SearchBox from '../../components/SearchBox';
 
 export default function Main(): JSX.Element {
 	const BookBox = React.lazy(() => import('../../components/BookBox'));

@@ -1,10 +1,14 @@
-export default function Navigation(): JSX.Element {
+import { observer } from 'mobx-react';
+import user from '../../store/userInfo';
+
+const Navigation = (): JSX.Element => {
 	return (
 		<nav>
 			<ul>
-				<li> 11111</li>
-				<li> 22222</li>
+				<li> {user.name}님 환영합니다</li>
 			</ul>
 		</nav>
 	);
-}
+};
+
+export default observer(Navigation);

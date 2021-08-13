@@ -1,21 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import user from '../../store/userInfo';
+import { observer } from 'mobx-react';
 
-export default function Login(): JSX.Element {
+const Login = (): JSX.Element => {
 	const responseGoogle = (resp: any) => {
-		console.log('response', resp);
-		setProfileName(resp.profileObj.name);
+		const { googleId = '', name = '', email = '' } = { ...resp.profileObj };
+		user.login({ id: googleId, name, email });
 	};
+
 	const responseGoogleLogout = () => {
-		setProfileName('');
-		console.log('로그아웃!');
+		user.logout();
 	};
-	const [profileName, setProfileName] = useState<string>('');
-	// useEffect(() => {});
 	return (
 		<>
-			<div>로그인 하세요...</div>
-			<div>{profileName}</div>
+			<div>로그인이 필요합니다.</div>
 			<GoogleLogin
 				clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID + ''}
 				buttonText="로그인"
@@ -24,11 +23,12 @@ export default function Login(): JSX.Element {
 				cookiePolicy={'single_host_origin'}
 			/>
 
-			<GoogleLogout
+			{/* <GoogleLogout
 				clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID + ''}
 				buttonText="로그아웃"
 				onLogoutSuccess={responseGoogleLogout}
-			></GoogleLogout>
+			></GoogleLogout> */}
 		</>
 	);
-}
+};
+export default observer(Login);
