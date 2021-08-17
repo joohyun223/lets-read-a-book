@@ -17,10 +17,10 @@ const ddStyle = {
 };
 
 export default function BookBox(props: bProps): JSX.Element {
-	const [thumbImgUrl, setThumbImgUrl] = useState<string>('../../../img/noimg.gif');
+	const [thumbImgUrl, setThumbImgUrl] = useState<string>(process.env.PUBLIC_URL + '/img/noimg.gif');
 	useEffect(() => {
 		axios
-			.get(`/v3/search/book?target=isbn&query=${props.isbn}`, {
+			.get(`https://dapi.kakao.com/v3/search/book?target=isbn&query=${props.isbn}`, {
 				headers: {
 					Authorization: process.env.REACT_APP_KAKAO_API_KEY,
 				},
@@ -29,7 +29,7 @@ export default function BookBox(props: bProps): JSX.Element {
 				setThumbImgUrl(res.data.documents[0].thumbnail);
 			})
 			.catch(error => {
-				setThumbImgUrl('../../../img/noimg.gif');
+				setThumbImgUrl(process.env.PUBLIC_URL + '/img/noimg.gif');
 			});
 	}, [props.isbn]);
 

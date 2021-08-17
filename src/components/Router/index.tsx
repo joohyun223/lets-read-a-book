@@ -16,11 +16,11 @@ export default function AppRouter(props: Props): JSX.Element {
 			<Switch>
 				<>
 					{props.isLoggedIn ? (
-						<Route exact path="/">
+						<Route path="/">
 							<Main></Main>
 						</Route>
 					) : (
-						<Route exact path="/">
+						<Route path="/">
 							<Login></Login>
 						</Route>
 					)}
