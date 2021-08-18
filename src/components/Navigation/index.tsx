@@ -1,24 +1,72 @@
+import { useState } from 'react';
 import { observer } from 'mobx-react';
 import user from '../../store/userInfo';
-import { GoogleLogout } from 'react-google-login';
+import { AppBar, Toolbar, IconButton, Typography, Avatar, MenuItem, Menu } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { useGoogleLogout } from 'react-google-login';
+
+const useStyles = makeStyles(() => ({
+	avatar: {
+		marginRight: '6px',
+		backgroundColor: 'green',
+	},
+	menuBox: {
+		display: 'flex',
+	},
+	toolbar: {
+		display: 'flex',
+		justifyContent: 'space-between',
+	},
+}));
 
 const Navigation = (): JSX.Element => {
-	const responseGoogleLogout = () => {
-		user.logout();
+	const classes = useStyles();
+	const [anchorEl, setAnchorEl] = useState(null);
+	const open = Boolean(anchorEl);
+	const { signOut, loaded } = useGoogleLogout({
+		clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID + '',
+		onLogoutSuccess: () => {
+			user.logout();
+		},
+	});
+
+	const handleMenu = (event: any) => {
+		setAnchorEl(event.currentTarget);
 	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
 	return (
-		<nav>
-			<ul>
-				<li> {user.name}님 환영합니다</li>
-				<li>
-					<GoogleLogout
-						clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID + ''}
-						buttonText="로그아웃"
-						onLogoutSuccess={responseGoogleLogout}
-					></GoogleLogout>
-				</li>
-			</ul>
-		</nav>
+		<AppBar position="static">
+			<Toolbar className={classes.toolbar}>
+				<Typography variant="h6">책을 읽읍시다</Typography>
+				<div className={classes.menuBox}>
+					<IconButton aria-haspopup="true" onClick={handleMenu} color="inherit">
+						<Avatar className={classes.avatar}>{user.givenName} </Avatar>
+					</IconButton>
+					<Menu
+						id="menu-appbar"
+						anchorEl={anchorEl}
+						keepMounted
+						open={open}
+						onClose={handleClose}
+						getContentAnchorEl={null}
+						anchorOrigin={{
+							vertical: 'bottom',
+							horizontal: 'center',
+						}}
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'center',
+						}}
+					>
+						<MenuItem onClick={signOut}>로그아웃</MenuItem>
+					</Menu>
+				</div>
+			</Toolbar>
+		</AppBar>
 	);
 };
 
