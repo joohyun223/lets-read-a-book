@@ -4,6 +4,18 @@ import { List, ListItem } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { BookBoxSeleton } from '../../components/Skeleton';
 import SearchBox from '../../components/SearchBox';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(() => ({
+	searchBox: {
+		margin: '20px 0 0 0',
+	},
+	pagination: {
+		display: 'flex',
+		justifyContent: 'center',
+		margin: '30px 30px',
+	},
+}));
 
 export default function Main(): JSX.Element {
 	const BookBox = React.lazy(() => import('../../components/BookBox'));
@@ -56,12 +68,12 @@ export default function Main(): JSX.Element {
 		setCurrentPage(1);
 		return;
 	};
-
+	const classes = useStyles();
 	return (
 		<>
-			<SearchBox goSearch={searchFunc} />
+			<SearchBox className={classes.searchBox} goSearch={searchFunc} />
 			<Pagination
-				style={{ display: 'flex', justifyContent: 'center' }}
+				className={classes.pagination}
 				count={pageCount}
 				page={currentPage}
 				onChange={(evt, page) => pageChanged(page)}
@@ -93,7 +105,7 @@ export default function Main(): JSX.Element {
 				)}
 			</ul>
 			<Pagination
-				style={{ display: 'flex', justifyContent: 'center' }}
+				className={classes.pagination}
 				count={pageCount}
 				color="primary"
 				page={currentPage}

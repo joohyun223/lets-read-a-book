@@ -3,6 +3,8 @@ import { useRef } from 'react';
 
 interface props {
 	goSearch: (args: string) => void;
+	style?: any;
+	className?: string;
 }
 export default function SearchBox(prop: props): JSX.Element {
 	const txtField = useRef<HTMLInputElement>(null);
@@ -12,7 +14,7 @@ export default function SearchBox(prop: props): JSX.Element {
 		}
 	};
 	return (
-		<div style={{ padding: '10px' }}>
+		<div style={prop.style} className={prop.className}>
 			<form noValidate autoComplete="off">
 				<TextField
 					inputRef={txtField}
