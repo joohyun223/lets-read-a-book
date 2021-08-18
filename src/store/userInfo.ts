@@ -3,14 +3,19 @@ import { observable, action, computed, makeObservable } from 'mobx';
 interface Props {
 	id: string;
 	name: string;
+	givenName: string;
 	email: string;
 }
 class UserInfo {
+	givenName = '';
 	name = '';
 	email = '';
 	id = '';
 	loggedIn = false;
 
+	get userGivenName(): string {
+		return this.givenName;
+	}
 	get userName(): string {
 		return this.name;
 	}
@@ -19,6 +24,7 @@ class UserInfo {
 	}
 	constructor(name: string) {
 		makeObservable(this, {
+			givenName: observable,
 			name: observable,
 			id: observable,
 			loggedIn: observable,
@@ -33,6 +39,7 @@ class UserInfo {
 	login(props: Props) {
 		this.id = props.id;
 		this.name = props.name;
+		this.givenName = props.givenName;
 		this.email = props.email;
 		this.loggedIn = true;
 	}
@@ -40,6 +47,7 @@ class UserInfo {
 	logout() {
 		this.id = '';
 		this.name = '';
+		this.givenName = '';
 		this.email = '';
 		this.loggedIn = false;
 	}

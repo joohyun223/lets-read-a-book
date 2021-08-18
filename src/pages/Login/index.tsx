@@ -7,8 +7,9 @@ const Login = (): JSX.Element => {
 		if (resp.error) {
 			return;
 		}
-		const { googleId = '', name = '', email = '' } = { ...resp.profileObj };
-		user.login({ id: googleId, name, email });
+		const { googleId = '', name = '', email = '', givenName = '' } = { ...resp.profileObj };
+
+		user.login({ id: googleId, name, email, givenName });
 	};
 
 	return (
