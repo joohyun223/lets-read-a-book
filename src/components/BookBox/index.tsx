@@ -58,13 +58,12 @@ export default function BookBox(props: bProps): JSX.Element {
 					<Button
 						onClick={() => {
 							axios
-								.post('http://localhost:4500/borrows/book', {
+								.post(`${process.env.REACT_APP_BORROW_URI}`, {
 									isbn: props.isbn,
 									lender: user.userName,
 								})
 								.then(resp => {
 									console.log('response', resp);
-
 									//디비 업뎃완료 -> 구글시트 업뎃? 몽구book디비업뎃?
 									//책 목록 데이터 다시 가져와 표시해주기
 								})

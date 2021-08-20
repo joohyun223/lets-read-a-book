@@ -26,6 +26,7 @@ const Navigation = (): JSX.Element => {
 	const { signOut, loaded } = useGoogleLogout({
 		clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID + '',
 		onLogoutSuccess: () => {
+			sessionStorage.removeItem('login_session');
 			user.logout();
 		},
 	});

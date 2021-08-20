@@ -5,11 +5,19 @@ import { observer } from 'mobx-react';
 const Login = (): JSX.Element => {
 	const responseGoogle = (resp: any) => {
 		if (resp.error) {
+			console.error(resp.error);
 			return;
 		}
-		const { googleId = '', name = '', email = '', givenName = '' } = { ...resp.profileObj };
-
-		user.login({ id: googleId, name, email, givenName });
+		const {
+			googleId = '',
+			name = '',
+			email = '',
+			givenName = '',
+			access_token = '',
+		} = { ...resp.profileObj, ...resp.tokenObj };
+		const loginInfo = { id: googleId, name, email, givenName, token: access_token };
+		user.login(loginInfo);
+		sessionStorage.setItem('login_session', JSON.stringify(loginInfo));
 	};
 
 	return (

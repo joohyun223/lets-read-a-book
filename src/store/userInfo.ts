@@ -5,12 +5,14 @@ interface Props {
 	name: string;
 	givenName: string;
 	email: string;
+	token: string;
 }
 class UserInfo {
 	givenName = '';
 	name = '';
 	email = '';
 	id = '';
+	token = '';
 	loggedIn = false;
 
 	get userGivenName(): string {
@@ -20,6 +22,10 @@ class UserInfo {
 		return this.name;
 	}
 	get isLoggedIn(): boolean {
+		const sessionInfo = sessionStorage.getItem('login_session');
+		if (sessionInfo) {
+			this.login(JSON.parse(sessionInfo));
+		}
 		return this.loggedIn;
 	}
 	constructor(name: string) {
@@ -41,6 +47,7 @@ class UserInfo {
 		this.name = props.name;
 		this.givenName = props.givenName;
 		this.email = props.email;
+		this.token = props.token;
 		this.loggedIn = true;
 	}
 
@@ -49,6 +56,7 @@ class UserInfo {
 		this.name = '';
 		this.givenName = '';
 		this.email = '';
+		this.token = '';
 		this.loggedIn = false;
 	}
 }
