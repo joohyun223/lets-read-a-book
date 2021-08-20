@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Grid, Button } from '@material-ui/core';
+import user from '../../store/userInfo';
 
 interface bProps {
 	num: number;
@@ -52,15 +53,46 @@ export default function BookBox(props: bProps): JSX.Element {
 				<dd style={ddStyle}>대여자: {props.lender}</dd>
 			</Grid>
 			<Grid item xs={2}>
-				<Button
-					color="primary"
-					style={{
-						backgroundColor: 'aliceblue',
-						height: '100%',
-					}}
-				>
-					대여하기
-				</Button>
+				{/* 대여가능/대여불가/반납/연장 구분하기 */}
+				{props.lender === '연구소(보관)' ? (
+					<Button
+						onClick={() => {
+							axios
+								.post('http://localhost:4500/borrows/book', {
+									isbn: props.isbn,
+									lender: user.userName,
+								})
+								.then(resp => {
+									console.log('response', resp);
+
+									//디비 업뎃완료 -> 구글시트 업뎃? 몽구book디비업뎃?
+									//책 목록 데이터 다시 가져와 표시해주기
+								})
+								.catch(err => {
+									//이미 다른 사람이 빌려갔다면 다이얼로그 표시
+									console.error('err', err);
+								});
+						}}
+						color="primary"
+						style={{
+							backgroundColor: 'aliceblue',
+							height: '100%',
+						}}
+					>
+						대여하기
+					</Button>
+				) : (
+					<Button
+						color="primary"
+						disabled
+						style={{
+							backgroundColor: 'aliceblue',
+							height: '100%',
+						}}
+					>
+						대여불가
+					</Button>
+				)}
 			</Grid>
 		</Grid>
 	);
