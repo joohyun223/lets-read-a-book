@@ -2,8 +2,14 @@ import { useState } from 'react';
 import { observer } from 'mobx-react';
 import user from '../../store/userInfo';
 import { AppBar, Toolbar, IconButton, Typography, Avatar, MenuItem, Menu } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import {
+	makeStyles,
+	unstable_createMuiStrictModeTheme,
+	ThemeProvider,
+} from '@material-ui/core/styles';
 import { useGoogleLogout } from 'react-google-login';
+
+const theme = unstable_createMuiStrictModeTheme();
 
 const useStyles = makeStyles(() => ({
 	avatar: {
@@ -44,27 +50,29 @@ const Navigation = (): JSX.Element => {
 			<Toolbar className={classes.toolbar}>
 				<Typography variant="h6">책을 읽읍시다</Typography>
 				<div className={classes.menuBox}>
-					<IconButton aria-haspopup="true" onClick={handleMenu} color="inherit">
-						<Avatar className={classes.avatar}>{user.givenName} </Avatar>
-					</IconButton>
-					<Menu
-						id="menu-appbar"
-						anchorEl={anchorEl}
-						keepMounted
-						open={open}
-						onClose={handleClose}
-						getContentAnchorEl={null}
-						anchorOrigin={{
-							vertical: 'bottom',
-							horizontal: 'center',
-						}}
-						transformOrigin={{
-							vertical: 'top',
-							horizontal: 'center',
-						}}
-					>
-						<MenuItem onClick={signOut}>로그아웃</MenuItem>
-					</Menu>
+					<ThemeProvider theme={theme}>
+						<IconButton aria-haspopup="true" onClick={handleMenu} color="inherit">
+							<Avatar className={classes.avatar}>{user.givenName} </Avatar>
+						</IconButton>
+						<Menu
+							id="menu-appbar"
+							anchorEl={anchorEl}
+							keepMounted
+							open={open}
+							onClose={handleClose}
+							getContentAnchorEl={null}
+							anchorOrigin={{
+								vertical: 'bottom',
+								horizontal: 'center',
+							}}
+							transformOrigin={{
+								vertical: 'top',
+								horizontal: 'center',
+							}}
+						>
+							<MenuItem onClick={signOut}>로그아웃</MenuItem>
+						</Menu>
+					</ThemeProvider>
 				</div>
 			</Toolbar>
 		</AppBar>
