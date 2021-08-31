@@ -5,8 +5,10 @@ import { Pagination } from '@material-ui/lab';
 import { BookBoxSeleton } from '../../components/Skeleton';
 import SearchBox from '../../components/SearchBox';
 import { makeStyles } from '@material-ui/core/styles';
+import commonState from '../../store/commonState';
+import { common } from '@material-ui/core/colors';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
 	searchBox: {
 		margin: '20px 0 0 0',
 	},
@@ -19,24 +21,50 @@ const useStyles = makeStyles(() => ({
 
 export default function Main(): JSX.Element {
 	const BookBox = React.lazy(() => import('../../components/BookBox'));
-	const startNum = 3;
-	const endNum = 9999;
-	const sheetsUrl = `https://sheets.googleapis.com/v4/spreadsheets/${process.env.REACT_APP_RBOOK_LIST_KEY}/values/${process.env.REACT_APP_RBOOK_SHEET_NAME}!A${startNum}:L${endNum}?key=${process.env.REACT_APP_GOOGLE_KEY}`;
 	const [bookDatas, setBookDatas] = useState<any[]>([]);
 	const [searchDatas, setSearchDatas] = useState<any[]>(['']);
 	const [pageCount, setPageCount] = useState<number>(1);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [isSearching, setIsSearching] = useState<boolean>(false);
+	const [searchTxt, setSearchTxt] = useState<string>('');
 
 	useEffect(() => {
 		const fetchBooKData = async () => {
-			const rBookData = await axios.get(sheetsUrl);
-
-			setPageCount(Math.ceil(rBookData.data.values.length / 10));
-			setBookDatas(rBookData.data.values);
+			const rBookData = await axios.get(`${process.env.REACT_APP_BOOK_URI}`);
+			setPageCount(Math.ceil(rBookData.data.length / 10));
+			setBookDatas(rBookData.data);
 		};
-		fetchBooKData();
-	}, []);
+		const { isbn: cdIsbn, _id: cdId } = commonState.willChangeData;
+		const fetchSingleBookData = async () => {
+			const rSingleBookData = await axios.get(
+				`${process.env.REACT_APP_BOOK_URI}?isbn=${cdIsbn}&_id=${cdId}`,
+			);
+
+			bookDatas.forEach((_, i) => {
+				if (_._id == cdId) {
+					bookDatas[i] = rSingleBookData.data[0];
+					return;
+				}
+			});
+
+			setBookDatas(prev => {
+				return [...prev];
+			});
+
+			commonState.willChangeBook = { isbn: '', _id: '' };
+		};
+		if (cdIsbn != '') {
+			fetchSingleBookData();
+		} else {
+			fetchBooKData();
+		}
+	}, [commonState.bookFetch]);
+
+	useEffect(() => {
+		if (isSearching) {
+			searchFunc(searchTxt);
+		}
+	}, [bookDatas]);
 
 	const pageChanged = (page: number) => {
 		setCurrentPage(page);
@@ -47,6 +75,7 @@ export default function Main(): JSX.Element {
 		if (searchText === '') {
 			setSearchDatas(['']);
 			setIsSearching(false);
+			setSearchTxt('');
 			setCurrentPage(1);
 			setPageCount(Math.ceil(bookDatas.length / 10));
 			return;
@@ -54,16 +83,18 @@ export default function Main(): JSX.Element {
 
 		const searchTxt = searchText.replace(regExp, '');
 		const searchType = /^[0-9]{13}$/g.test(searchTxt) ? 'ISBN' : 'OTHERS';
+
 		const searched = bookDatas.filter(data => {
 			return (
-				(searchType === 'ISBN' && data[4] === searchTxt) || //isbn
-				data[2].replace(regExp, '').match(new RegExp(searchTxt, 'gi')) || //도서명
-				data[11].includes(searchTxt) //대여자명
+				(searchType === 'ISBN' && data.isbn === searchTxt) || //isbn
+				data.name.replace(regExp, '').match(new RegExp(searchTxt, 'gi')) || //도서명
+				data.lender.includes(searchTxt) //대여자명
 			);
 		});
 
 		setSearchDatas(searched);
 		setIsSearching(true);
+		setSearchTxt(searchTxt);
 		setPageCount(Math.ceil(searched.length / 10));
 		setCurrentPage(1);
 		return;
@@ -92,10 +123,11 @@ export default function Main(): JSX.Element {
 										<Suspense fallback={<BookBoxSeleton />}>
 											<BookBox
 												num={(currentPage - 1) * 10 + i + 1}
-												pNum={data[10]}
-												sub={data[2]}
-												lender={data[11]}
-												isbn={data[4]}
+												pNum={data.admn}
+												sub={data.name}
+												lender={data.lender}
+												isbn={data.isbn}
+												_id={data._id}
 											></BookBox>
 										</Suspense>
 									</ListItem>
