@@ -5,6 +5,7 @@ interface Props {
 	name: string;
 	givenName: string;
 	email: string;
+	imageUrl: string;
 	token: string;
 }
 class UserInfo {
@@ -13,6 +14,7 @@ class UserInfo {
 	email = '';
 	id = '';
 	token = '';
+	imageUrl = '';
 	loggedIn = false;
 
 	get userGivenName(): string {
@@ -48,6 +50,7 @@ class UserInfo {
 		this.givenName = props.givenName;
 		this.email = props.email;
 		this.token = props.token;
+		this.imageUrl = props.imageUrl;
 		this.loggedIn = true;
 	}
 
@@ -57,6 +60,7 @@ class UserInfo {
 		this.givenName = '';
 		this.email = '';
 		this.token = '';
+		this.imageUrl = '';
 		this.loggedIn = false;
 	}
 }

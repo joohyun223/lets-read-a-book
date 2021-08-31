@@ -52,7 +52,8 @@ const Navigation = (): JSX.Element => {
 				<div className={classes.menuBox}>
 					<ThemeProvider theme={theme}>
 						<IconButton aria-haspopup="true" onClick={handleMenu} color="inherit">
-							<Avatar className={classes.avatar}>{user.givenName} </Avatar>
+							<Avatar className={classes.avatar} src={user.imageUrl} />
+							<p style={{ fontSize: '16px' }}>{user.name} 님</p>
 						</IconButton>
 						<Menu
 							id="menu-appbar"

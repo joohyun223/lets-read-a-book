@@ -8,14 +8,16 @@ const Login = (): JSX.Element => {
 			console.error(resp.error);
 			return;
 		}
+
 		const {
 			googleId = '',
 			name = '',
 			email = '',
 			givenName = '',
 			access_token = '',
+			imageUrl = '',
 		} = { ...resp.profileObj, ...resp.tokenObj };
-		const loginInfo = { id: googleId, name, email, givenName, token: access_token };
+		const loginInfo = { id: googleId, name, email, givenName, token: access_token, imageUrl };
 		user.login(loginInfo);
 		sessionStorage.setItem('login_session', JSON.stringify(loginInfo));
 	};
