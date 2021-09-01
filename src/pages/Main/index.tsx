@@ -3,7 +3,7 @@ import axios from 'axios';
 import { List, ListItem } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { BookBoxSeleton } from '../../components/Skeleton';
-import SearchBox from '../../components/SearchBox';
+import SearchBox from '../../components/SearchBox2';
 import { makeStyles } from '@material-ui/core/styles';
 import commonState from '../../store/commonState';
 
