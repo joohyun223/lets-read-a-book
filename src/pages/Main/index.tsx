@@ -6,7 +6,6 @@ import { BookBoxSeleton } from '../../components/Skeleton';
 import SearchBox from '../../components/SearchBox';
 import { makeStyles } from '@material-ui/core/styles';
 import commonState from '../../store/commonState';
-import { common } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
 	searchBox: {
