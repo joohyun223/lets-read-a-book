@@ -1,4 +1,3 @@
-import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { Grid, Button } from '@material-ui/core';
 import user from '../../store/userInfo';
@@ -24,8 +23,6 @@ const ddStyle = {
 const lenderStyle = { ...ddStyle, color: 'blue' };
 
 const BookBox = (props: bProps): JSX.Element => {
-	const imgUri = useMemo(() => props.poster, [props.poster]);
-
 	return (
 		<Grid container direction="row" spacing={3}>
 			<Grid item xs={1}>
@@ -35,7 +32,7 @@ const BookBox = (props: bProps): JSX.Element => {
 			<Grid item xs={2} className="Thumb">
 				<img
 					style={{ width: '82px', height: '105px' }}
-					src={imgUri || process.env.PUBLIC_URL + '/img/noimg.gif'}
+					src={props.poster || process.env.PUBLIC_URL + '/img/noimg.gif'}
 					alt={props.sub}
 				/>
 			</Grid>
@@ -129,4 +126,4 @@ const BookBox = (props: bProps): JSX.Element => {
 	);
 };
 
-export default React.memo(BookBox);
+export default BookBox;
