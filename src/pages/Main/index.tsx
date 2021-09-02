@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default function Main(): JSX.Element {
+const Main = (): JSX.Element => {
 	const BookBox = React.lazy(() => import('../../components/BookBox'));
 	const [bookDatas, setBookDatas] = useState<any[]>([]);
 	const [searchDatas, setSearchDatas] = useState<any[]>(['']);
@@ -52,6 +52,7 @@ export default function Main(): JSX.Element {
 
 			commonState.willChangeBook = { isbn: '', _id: '' };
 		};
+
 		if (cdIsbn != '') {
 			fetchSingleBookData();
 		} else {
@@ -126,6 +127,7 @@ export default function Main(): JSX.Element {
 												sub={data.name}
 												lender={data.lender}
 												isbn={data.isbn}
+												poster={data.poster}
 												_id={data._id}
 											></BookBox>
 										</Suspense>
@@ -144,4 +146,6 @@ export default function Main(): JSX.Element {
 			/>
 		</>
 	);
-}
+};
+
+export default Main;

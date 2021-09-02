@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { Grid, Button } from '@material-ui/core';
 import user from '../../store/userInfo';
@@ -11,6 +11,7 @@ interface bProps {
 	pNum: string;
 	isbn: string;
 	lender: string;
+	poster: string;
 	_id: string;
 }
 const ddStyle = {
@@ -22,22 +23,8 @@ const ddStyle = {
 
 const lenderStyle = { ...ddStyle, color: 'blue' };
 
-export default function BookBox(props: bProps): JSX.Element {
-	const [thumbImgUrl, setThumbImgUrl] = useState<string>(process.env.PUBLIC_URL + '/img/noimg.gif');
-	useEffect(() => {
-		axios
-			.get(`${process.env.REACT_APP_DAPI_URL}?target=isbn&query=${props.isbn}`, {
-				headers: {
-					Authorization: process.env.REACT_APP_KAKAO_API_KEY,
-				},
-			})
-			.then(res => {
-				setThumbImgUrl(res.data.documents[0].thumbnail);
-			})
-			.catch(error => {
-				setThumbImgUrl(process.env.PUBLIC_URL + '/img/noimg.gif');
-			});
-	}, [props.isbn]);
+const BookBox = (props: bProps): JSX.Element => {
+	const imgUri = useMemo(() => props.poster, [props.poster]);
 
 	return (
 		<Grid container direction="row" spacing={3}>
@@ -46,7 +33,11 @@ export default function BookBox(props: bProps): JSX.Element {
 			</Grid>
 
 			<Grid item xs={2} className="Thumb">
-				<img style={{ width: '82px', height: '105px' }} src={thumbImgUrl} alt={props.sub} />
+				<img
+					style={{ width: '82px', height: '105px' }}
+					src={imgUri || process.env.PUBLIC_URL + '/img/noimg.gif'}
+					alt={props.sub}
+				/>
 			</Grid>
 
 			<Grid item xs={7} className="bookDataWrap" style={{ textAlign: 'left' }}>
@@ -136,4 +127,6 @@ export default function BookBox(props: bProps): JSX.Element {
 			</Grid>
 		</Grid>
 	);
-}
+};
+
+export default React.memo(BookBox);
