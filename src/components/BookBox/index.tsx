@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { Grid, Button } from '@material-ui/core';
 import user from '../../store/userInfo';
-import modalState from '../../store/modalState';
 import commonState from '../../store/commonState';
+import modalState from '../../store/modalState';
 
 interface bProps {
 	num: number;
@@ -21,6 +21,14 @@ const ddStyle = {
 };
 
 const lenderStyle = { ...ddStyle, color: 'blue' };
+const showHistory = (isbn: string) => {
+	axios.get(`${process.env.REACT_APP_BORROW_URI}?isbn=${isbn}`).then(res => {
+		//대여/반납기록 표시
+		modalState.tit = res.data.length ? '대여/반납 내역' : '대여내역이 존재하지 않습니다';
+		modalState.cont = res.data;
+		modalState.display = true;
+	});
+};
 
 const BookBox = (props: bProps): JSX.Element => {
 	return (
@@ -38,7 +46,16 @@ const BookBox = (props: bProps): JSX.Element => {
 			</Grid>
 
 			<Grid item xs={7} className="bookDataWrap" style={{ textAlign: 'left' }}>
-				<dt className="book_title">{props.sub}</dt>
+				<Button
+					style={{ padding: '0px' }}
+					size="medium"
+					className="book_title"
+					onClick={() => {
+						showHistory(props.isbn);
+					}}
+				>
+					{props.sub}
+				</Button>
 				<dd style={ddStyle}>
 					<span>관리번호: {props.pNum} </span>
 					<span>isbn: {props.isbn}</span>
@@ -50,7 +67,7 @@ const BookBox = (props: bProps): JSX.Element => {
 				{props.lender === '연구소(보관)' ? (
 					<Button
 						onClick={() => {
-							const rentRequest = axios.post(`${process.env.REACT_APP_BORROW_URI}`, {
+							const rentRequest = axios.post(`${process.env.REACT_APP_BORROW_URI}/book`, {
 								isbn: props.isbn,
 								lender: user.userName,
 								gId: user.id,
@@ -118,7 +135,7 @@ const BookBox = (props: bProps): JSX.Element => {
 								});
 						}}
 					>
-						{props.lender === user.userName ? '반납하기' : '대여불가'}
+						{props.lender === user.userName ? '반납하기' : '대여중'}
 					</Button>
 				)}
 			</Grid>

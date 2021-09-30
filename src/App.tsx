@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import './App.css';
 import AppRouter from './components/Router';
 import { Modal } from '@material-ui/core';
@@ -29,11 +29,25 @@ const App = observer((): JSX.Element => {
 		console.log('App mounted');
 	}, []);
 
-	const modalHandleClose = () => {
+	const modalHandleClose = useCallback(() => {
 		modal.display = false;
+		modal.cont = [];
+		modal.msg = '';
 		commonState.bookListUpdate = Date.now().toString();
-	};
+	}, [modal]);
+
 	const classes = useStyles();
+
+	const history = useMemo(() => {
+		return modal.modalCont.map((data: any, i: number) => {
+			return (
+				<p key={i}>
+					대여자: {data.lender} &nbsp;&nbsp;
+					{data.state === 'DONE' ? `반납일: ${data.returnTime}` : `대여일: ${data.startTime}`}
+				</p>
+			);
+		});
+	}, [modal.modalCont]);
 
 	return (
 		<div className="App">
@@ -41,6 +55,8 @@ const App = observer((): JSX.Element => {
 				<div className={classes.paper}>
 					<h2 id="server-modal-title">{modal.modalTit}</h2>
 					<p id="server-modal-description">{modal.modalMsg}</p>
+
+					<div style={{ fontSize: 12 }}>{history}</div>
 				</div>
 			</Modal>
 			<AppRouter isLoggedIn={user.isLoggedIn}></AppRouter>

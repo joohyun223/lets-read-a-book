@@ -110,7 +110,7 @@ const Main = (): JSX.Element => {
 				onChange={(evt, page) => pageChanged(page)}
 				color="primary"
 			/>
-			<ul>
+			<List>
 				{searchDatas.length === 0 ? (
 					<div>검색 결과가 없습니다 :(</div>
 				) : (
@@ -118,25 +118,23 @@ const Main = (): JSX.Element => {
 						.slice((currentPage - 1) * 10, (currentPage - 1) * 10 + 10)
 						.map((data, i) => {
 							return (
-								<List key={i}>
-									<ListItem>
-										<Suspense fallback={<BookBoxSeleton />}>
-											<BookBox
-												num={(currentPage - 1) * 10 + i + 1}
-												pNum={data.admn}
-												sub={data.name}
-												lender={data.lender}
-												isbn={data.isbn}
-												poster={data.poster}
-												_id={data._id}
-											></BookBox>
-										</Suspense>
-									</ListItem>
-								</List>
+								<ListItem key={i}>
+									<Suspense fallback={<BookBoxSeleton />}>
+										<BookBox
+											num={(currentPage - 1) * 10 + i + 1}
+											pNum={data.admn}
+											sub={data.name}
+											lender={data.lender}
+											isbn={data.isbn}
+											poster={data.poster}
+											_id={data._id}
+										></BookBox>
+									</Suspense>
+								</ListItem>
 							);
 						})
 				)}
-			</ul>
+			</List>
 			<Pagination
 				className={classes.pagination}
 				count={pageCount}
