@@ -1,3 +1,4 @@
+import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { Grid, Button } from '@material-ui/core';
 import user from '../../store/userInfo';
@@ -12,6 +13,7 @@ interface bProps {
 	lender: string;
 	poster: string;
 	_id: string;
+	isLost: boolean;
 }
 const ddStyle = {
 	fontSize: '12px',
@@ -30,7 +32,18 @@ const showHistory = (isbn: string) => {
 	});
 };
 
+const useStyles = makeStyles(theme => ({
+	btn: {
+		height: '100%',
+	},
+	primary: {
+		backgroundColor: 'aliceblue',
+	},
+}));
+
 const BookBox = (props: bProps): JSX.Element => {
+	const classes = useStyles();
+
 	return (
 		<Grid container direction="row" spacing={3}>
 			<Grid item xs={1}>
@@ -64,7 +77,11 @@ const BookBox = (props: bProps): JSX.Element => {
 			</Grid>
 			<Grid item xs={2}>
 				{/* 대여가능/대여불가/반납/연장 구분하기 */}
-				{props.lender === '연구소(보관)' ? (
+				{props.isLost ? (
+					<Button className={classes.btn} disabled>
+						분실도서
+					</Button>
+				) : props.lender === '연구소(보관)' ? (
 					<Button
 						onClick={() => {
 							const rentRequest = axios.post(`${process.env.REACT_APP_BORROW_URI}/book`, {
@@ -93,10 +110,7 @@ const BookBox = (props: bProps): JSX.Element => {
 								});
 						}}
 						color="primary"
-						style={{
-							backgroundColor: 'aliceblue',
-							height: '100%',
-						}}
+						className={`${classes.btn} ${classes.primary}`}
 					>
 						대여하기
 					</Button>
@@ -104,10 +118,7 @@ const BookBox = (props: bProps): JSX.Element => {
 					<Button
 						disabled={props.lender === user.userName ? false : true}
 						color={props.lender === user.userName ? 'secondary' : 'primary'}
-						style={{
-							backgroundColor: 'aliceblue',
-							height: '100%',
-						}}
+						className={`${classes.btn} ${classes.primary}`}
 						onClick={() => {
 							const returnRequest = axios.put(`${process.env.REACT_APP_RETURN_URI}`, {
 								isbn: props.isbn,
