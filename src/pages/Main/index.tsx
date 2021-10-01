@@ -16,6 +16,10 @@ const useStyles = makeStyles(theme => ({
 		justifyContent: 'center',
 		margin: '30px 30px',
 	},
+	contBox: {
+		display: 'flex',
+		justifyContent: 'center',
+	},
 }));
 
 const Main = (): JSX.Element => {
@@ -110,31 +114,34 @@ const Main = (): JSX.Element => {
 				onChange={(evt, page) => pageChanged(page)}
 				color="primary"
 			/>
-			<List>
-				{searchDatas.length === 0 ? (
-					<div>검색 결과가 없습니다 :(</div>
-				) : (
-					(isSearching ? searchDatas : bookDatas)
-						.slice((currentPage - 1) * 10, (currentPage - 1) * 10 + 10)
-						.map((data, i) => {
-							return (
-								<ListItem key={i}>
-									<Suspense fallback={<BookBoxSeleton />}>
-										<BookBox
-											num={(currentPage - 1) * 10 + i + 1}
-											pNum={data.admn}
-											sub={data.name}
-											lender={data.lender}
-											isbn={data.isbn}
-											poster={data.poster}
-											_id={data._id}
-										></BookBox>
-									</Suspense>
-								</ListItem>
-							);
-						})
-				)}
-			</List>
+			<div className={classes.contBox}>
+				<List>
+					{searchDatas.length === 0 ? (
+						<div>검색 결과가 없습니다 :(</div>
+					) : (
+						(isSearching ? searchDatas : bookDatas)
+							.slice((currentPage - 1) * 10, (currentPage - 1) * 10 + 10)
+							.map((data, i) => {
+								return (
+									<ListItem key={i}>
+										<Suspense fallback={<BookBoxSeleton />}>
+											<BookBox
+												num={(currentPage - 1) * 10 + i + 1}
+												pNum={data.admn}
+												sub={data.name}
+												lender={data.lender}
+												isbn={data.isbn}
+												poster={data.poster}
+												_id={data._id}
+												isLost={data.isLost}
+											></BookBox>
+										</Suspense>
+									</ListItem>
+								);
+							})
+					)}
+				</List>
+			</div>
 			<Pagination
 				className={classes.pagination}
 				count={pageCount}
