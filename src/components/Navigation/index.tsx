@@ -48,7 +48,6 @@ const Navigation = (): JSX.Element => {
 	};
 
 	const goHome = () => {
-		console.log('test');
 		evtState.runGoHome = Date.now().toString();
 	};
 

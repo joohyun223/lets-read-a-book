@@ -39,15 +39,11 @@ const Main = (): JSX.Element => {
 			setPageCount(Math.ceil(rBookData.data.length / 10));
 			setBookDatas(rBookData.data);
 		};
-		const { isbn: cdIsbn, _id: cdId } = commonState.willChangeData;
+		const { isbn: cdIsbn, _id: cdId, lender: cdLender } = commonState.willChangeData;
 		const fetchSingleBookData = async () => {
-			const rSingleBookData = await axios.get(
-				`${process.env.REACT_APP_BOOK_URI}?isbn=${cdIsbn}&_id=${cdId}`,
-			);
-
 			bookDatas.forEach((_, i) => {
 				if (_._id == cdId) {
-					bookDatas[i] = rSingleBookData.data[0];
+					bookDatas[i].lender = cdLender;
 					return;
 				}
 			});
@@ -56,7 +52,19 @@ const Main = (): JSX.Element => {
 				return [...prev];
 			});
 
-			commonState.willChangeBook = { isbn: '', _id: '' };
+			if (isSearching) {
+				searchDatas.forEach((_, i) => {
+					if (_._id == cdId) {
+						searchDatas[i].lender = cdLender;
+						return;
+					}
+				});
+				setSearchDatas(prev => {
+					return [...prev];
+				});
+			}
+
+			commonState.willChangeBook = { isbn: '', _id: '', lender: '' };
 		};
 
 		if (cdIsbn != '') {
@@ -65,12 +73,6 @@ const Main = (): JSX.Element => {
 			fetchBooKData();
 		}
 	}, [commonState.bookFetch]);
-
-	useEffect(() => {
-		if (isSearching) {
-			searchFunc(searchTxt);
-		}
-	}, [bookDatas]);
 
 	useEffect(() => {
 		setInitialValue();

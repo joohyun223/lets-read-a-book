@@ -33,7 +33,6 @@ const App = observer((): JSX.Element => {
 		modal.display = false;
 		modal.cont = [];
 		modal.msg = '';
-		commonState.bookListUpdate = Date.now().toString();
 	}, [modal]);
 
 	const classes = useStyles();

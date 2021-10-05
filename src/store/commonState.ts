@@ -3,10 +3,11 @@ import { observable, computed, makeObservable } from 'mobx';
 interface BookProps {
 	isbn: string;
 	_id: string;
+	lender: string;
 }
 class CommonState {
-	bookListUpdate = '0';
-	willChangeBook = { isbn: '', _id: '' };
+	bookListUpdate = false;
+	willChangeBook = { isbn: '', _id: '', lender: '' };
 
 	constructor() {
 		makeObservable(this, {
@@ -16,7 +17,7 @@ class CommonState {
 		});
 	}
 
-	get bookFetch(): string {
+	get bookFetch(): boolean {
 		return this.bookListUpdate;
 	}
 
