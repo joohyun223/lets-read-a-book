@@ -1,5 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
+import { observer } from 'mobx-react';
 import axios from 'axios';
+import evtState from '../../store/eventState';
 import { List, ListItem } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { BookBoxSeleton } from '../../components/Skeleton';
@@ -70,18 +72,26 @@ const Main = (): JSX.Element => {
 		}
 	}, [bookDatas]);
 
+	useEffect(() => {
+		setInitialValue();
+	}, [evtState.triggeredGoHome]);
+
 	const pageChanged = (page: number) => {
 		setCurrentPage(page);
+	};
+
+	const setInitialValue = () => {
+		setSearchDatas(['']);
+		setIsSearching(false);
+		setSearchTxt('');
+		setCurrentPage(1);
+		setPageCount(Math.ceil(bookDatas.length / 10));
 	};
 
 	const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //특수문자
 	const searchFunc = (searchText: string) => {
 		if (searchText === '') {
-			setSearchDatas(['']);
-			setIsSearching(false);
-			setSearchTxt('');
-			setCurrentPage(1);
-			setPageCount(Math.ceil(bookDatas.length / 10));
+			setInitialValue();
 			return;
 		}
 
@@ -153,4 +163,4 @@ const Main = (): JSX.Element => {
 	);
 };
 
-export default Main;
+export default observer(Main);

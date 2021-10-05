@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { observer } from 'mobx-react';
+import evtState from '../../store/eventState';
 import user from '../../store/userInfo';
 import { AppBar, Toolbar, IconButton, Typography, Avatar, MenuItem, Menu } from '@material-ui/core';
 import {
@@ -7,6 +8,7 @@ import {
 	unstable_createMuiStrictModeTheme,
 	ThemeProvider,
 } from '@material-ui/core/styles';
+
 import { useGoogleLogout } from 'react-google-login';
 
 const theme = unstable_createMuiStrictModeTheme();
@@ -45,10 +47,17 @@ const Navigation = (): JSX.Element => {
 		setAnchorEl(null);
 	};
 
+	const goHome = () => {
+		console.log('test');
+		evtState.runGoHome = Date.now().toString();
+	};
+
 	return (
 		<AppBar position="static">
 			<Toolbar className={classes.toolbar}>
-				<Typography variant="h6">책을 읽읍시다</Typography>
+				<Typography variant="h6" onClick={goHome}>
+					책을 읽읍시다
+				</Typography>
 				<div className={classes.menuBox}>
 					<ThemeProvider theme={theme}>
 						<IconButton aria-haspopup="true" onClick={handleMenu} color="inherit">
