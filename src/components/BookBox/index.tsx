@@ -89,17 +89,10 @@ const BookBox = (props: bProps): JSX.Element => {
 							// 대여정보 create
 							const rentRequest = axios.post(`${process.env.REACT_APP_BORROW_URI}/book`, {
 								isbn: props.isbn,
-								lender: user.userName,
 								gId: user.id,
-							});
-
-							// 도서 대여/반납 정보 업데이트
-							const dbUpdateRequest = axios.put(`${process.env.REACT_APP_BOOK_UPDATE_URI}`, {
-								isbn: props.isbn,
 								lender: user.userName,
 							});
-
-							Promise.all([rentRequest, dbUpdateRequest])
+							rentRequest
 								.then(() => {
 									commonState.willChangeBook = {
 										isbn: props.isbn,
@@ -133,12 +126,7 @@ const BookBox = (props: bProps): JSX.Element => {
 								lender: user.name,
 							});
 
-							const dbUpdateRequest = axios.put(`${process.env.REACT_APP_BOOK_UPDATE_URI}`, {
-								isbn: props.isbn,
-								lender: LENDER_DEFAULT,
-							});
-
-							Promise.all([returnRequest, dbUpdateRequest])
+							returnRequest
 								.then(() => {
 									commonState.willChangeBook = {
 										isbn: props.isbn,
