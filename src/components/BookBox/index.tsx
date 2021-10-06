@@ -86,12 +86,14 @@ const BookBox = (props: bProps): JSX.Element => {
 				) : lender === LENDER_DEFAULT ? (
 					<Button
 						onClick={() => {
+							// 대여정보 create
 							const rentRequest = axios.post(`${process.env.REACT_APP_BORROW_URI}/book`, {
 								isbn: props.isbn,
 								lender: user.userName,
 								gId: user.id,
 							});
 
+							// 도서 대여/반납 정보 업데이트
 							const dbUpdateRequest = axios.put(`${process.env.REACT_APP_BOOK_UPDATE_URI}`, {
 								isbn: props.isbn,
 								lender: user.userName,

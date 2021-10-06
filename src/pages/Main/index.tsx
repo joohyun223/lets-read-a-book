@@ -74,10 +74,6 @@ const Main = (): JSX.Element => {
 		}
 	}, [commonState.bookFetch]);
 
-	useEffect(() => {
-		setInitialValue();
-	}, [evtState.triggeredGoHome]);
-
 	const pageChanged = (page: number) => {
 		setCurrentPage(page);
 	};
