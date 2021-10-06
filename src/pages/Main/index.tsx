@@ -36,8 +36,31 @@ const Main = (): JSX.Element => {
 	useEffect(() => {
 		const fetchBooKData = async () => {
 			const rBookData = await axios.get(`${process.env.REACT_APP_BOOK_URI}`);
+			const borrowsData = await axios.get(`${process.env.REACT_APP_BORROW_URI}?distinct=true`);
+
+			/**
+			 * 대여정보 가져오기
+			 * 1. 원본도서에 해당하는 관리번호의 최신 대여정보가 존재하는가?
+			 * ? state가 done이면? 대여자 연구소로.: 대여자정보 표시
+			 * : 원본도서의 lender 출력
+			 */
+			const mergeData: any[] = [];
+			rBookData.data.forEach((bookData: any) => {
+				const _ = borrowsData.data.map((borrowsData: any) => {
+					if (bookData.isbn == borrowsData.isbn) {
+						if (borrowsData.state === 'DONE') {
+							bookData.lender = '연구소(보관)';
+						} else {
+							bookData.lender = borrowsData.lender;
+						}
+					}
+					return bookData;
+				});
+				mergeData.push(_[0]);
+			});
+
 			setPageCount(Math.ceil(rBookData.data.length / 10));
-			setBookDatas(rBookData.data);
+			setBookDatas(mergeData);
 		};
 		const { isbn: cdIsbn, _id: cdId, lender: cdLender } = commonState.willChangeData;
 		const fetchSingleBookData = async () => {

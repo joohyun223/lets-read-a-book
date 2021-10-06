@@ -5,7 +5,6 @@ import { Modal } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import user from './store/userInfo';
 import modal from './store/modalState';
-import commonState from './store/commonState';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
