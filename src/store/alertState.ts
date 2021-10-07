@@ -1,47 +1,49 @@
 import { observable, computed, makeObservable, action, ObservableMap } from 'mobx';
 interface Props {
-	msg?: string;
+	msg: string;
 	tit: string;
-	cont: any;
 	display?: boolean;
+	severity: string;
 }
 
-class ModalState {
+class AlertState {
 	msg = '';
 	tit = '';
-	cont = [];
 	display = false;
+	severity = 'success';
 	constructor() {
 		makeObservable(this, {
 			tit: observable,
 			msg: observable,
-			cont: observable,
+			severity: observable,
 			display: observable,
 			isDisplay: computed,
-			modalMsg: computed,
-			modalTit: computed,
-			modalCont: computed,
-			showModal: action,
+			alertMsg: computed,
+			alertTit: computed,
+			alertSeverity: computed,
+			showAlert: action,
 		});
 	}
-	get modalTit(): string {
+	get alertTit(): string {
 		return this.tit;
 	}
-	get modalMsg(): string {
+	get alertMsg(): string {
 		return this.msg;
 	}
 	get isDisplay(): boolean {
 		return this.display;
 	}
-	get modalCont(): any {
-		return this.cont;
+	get alertSeverity(): any {
+		return this.severity;
 	}
-	showModal(props: Props) {
+
+	showAlert(props: Props) {
 		this.tit = props.tit;
-		this.cont = props.cont;
+		this.msg = props.msg;
 		this.display = true;
+		this.severity = props.severity;
 	}
 }
 
-const modalState = new ModalState();
-export default modalState;
+const alertState = new AlertState();
+export default alertState;

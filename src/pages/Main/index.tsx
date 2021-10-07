@@ -1,7 +1,6 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import axios from 'axios';
-import evtState from '../../store/eventState';
 import { List, ListItem } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { BookBoxSeleton } from '../../components/Skeleton';

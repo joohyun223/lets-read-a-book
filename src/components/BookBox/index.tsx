@@ -4,8 +4,8 @@ import { Grid, Button } from '@material-ui/core';
 import user from '../../store/userInfo';
 import commonState from '../../store/commonState';
 import modalState from '../../store/modalState';
-import { useEffect, useState } from 'react';
-
+import alertState from '../../store/alertState';
+import { useState } from 'react';
 interface bProps {
 	num: number;
 	sub: string;
@@ -27,9 +27,10 @@ const lenderStyle = { ...ddStyle, color: 'blue' };
 const showHistory = (isbn: string) => {
 	axios.get(`${process.env.REACT_APP_BORROW_URI}?isbn=${isbn}`).then(res => {
 		//대여/반납기록 표시
-		modalState.tit = res.data.length ? '대여/반납 내역' : '대여내역이 존재하지 않습니다';
-		modalState.cont = res.data;
-		modalState.display = true;
+		modalState.showModal({
+			tit: res.data.length ? '대여/반납 내역' : '대여내역이 존재하지 않습니다',
+			cont: res.data,
+		});
 	});
 };
 
@@ -44,7 +45,6 @@ const useStyles = makeStyles(theme => ({
 
 const BookBox = (props: bProps): JSX.Element => {
 	const [lender, setLender] = useState(props.lender);
-
 	const classes = useStyles();
 	return (
 		<Grid container direction="row" spacing={3}>
@@ -62,7 +62,7 @@ const BookBox = (props: bProps): JSX.Element => {
 
 			<Grid item xs={7} className="bookDataWrap" style={{ width: '400px', textAlign: 'left' }}>
 				<Button
-					style={{ padding: '0px' }}
+					style={{ padding: '0px', textAlign: 'start' }}
 					size="medium"
 					className="book_title"
 					onClick={() => {
@@ -80,8 +80,8 @@ const BookBox = (props: bProps): JSX.Element => {
 			<Grid item xs={2}>
 				{/* 대여가능/대여불가/반납/연장 구분하기 */}
 				{props.isLost ? (
-					<Button className={classes.btn} disabled>
-						분실도서
+					<Button className={classes.btn} style={{ backgroundColor: '#eeee' }} disabled>
+						분실
 					</Button>
 				) : lender === LENDER_DEFAULT ? (
 					<Button
@@ -101,11 +101,18 @@ const BookBox = (props: bProps): JSX.Element => {
 									};
 									commonState.bookListUpdate = !commonState.bookListUpdate;
 									setLender(user.userName);
-									modalState.tit = '대여되었습니다.';
-									modalState.msg = '해당 도서를 10층 보관소에서 가져가시면 됩니다';
-									modalState.display = true;
+									alertState.showAlert({
+										tit: '대여되었습니다',
+										msg: '해당 도서를 10층 보관소에서 가져가시면 됩니다.',
+										severity: 'success',
+									});
 								})
 								.catch(err => {
+									alertState.showAlert({
+										tit: '대여 할 수 없습니다',
+										msg: '이미 대여 된 도서입니다.',
+										severity: 'error',
+									});
 									console.error('err', err);
 								});
 						}}
@@ -118,7 +125,10 @@ const BookBox = (props: bProps): JSX.Element => {
 					<Button
 						disabled={lender === user.userName ? false : true}
 						color={lender === user.userName ? 'secondary' : 'primary'}
-						className={`${classes.btn} ${classes.primary}`}
+						className={`${classes.btn}`}
+						style={
+							lender === user.userName ? { backgroundColor: '#feea' } : { backgroundColor: '#eeee' }
+						}
 						onClick={() => {
 							const returnRequest = axios.put(`${process.env.REACT_APP_RETURN_URI}`, {
 								isbn: props.isbn,
@@ -136,9 +146,11 @@ const BookBox = (props: bProps): JSX.Element => {
 									commonState.bookListUpdate = !commonState.bookListUpdate;
 
 									setLender(LENDER_DEFAULT);
-									modalState.tit = '반납되었습니다.';
-									modalState.msg = '해당 도서를 10층 보관소에 반납해 주세요';
-									modalState.display = true;
+									alertState.showAlert({
+										tit: '반납되었습니다',
+										msg: '해당 도서를 10층 보관소에 반납해 주세요.',
+										severity: 'success',
+									});
 								})
 								.catch(err => {
 									console.error('err', err);

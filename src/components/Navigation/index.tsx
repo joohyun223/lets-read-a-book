@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { observer } from 'mobx-react';
-import evtState from '../../store/eventState';
 import user from '../../store/userInfo';
 import { AppBar, Toolbar, IconButton, Typography, Avatar, MenuItem, Menu } from '@material-ui/core';
 import {
