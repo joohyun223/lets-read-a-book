@@ -7,6 +7,7 @@ import {
 	unstable_createMuiStrictModeTheme,
 	ThemeProvider,
 } from '@material-ui/core/styles';
+
 import { useGoogleLogout } from 'react-google-login';
 
 const theme = unstable_createMuiStrictModeTheme();
@@ -29,7 +30,7 @@ const Navigation = (): JSX.Element => {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
-	const { signOut, loaded } = useGoogleLogout({
+	const { signOut } = useGoogleLogout({
 		clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID + '',
 		onLogoutSuccess: () => {
 			sessionStorage.removeItem('login_session');
@@ -45,10 +46,16 @@ const Navigation = (): JSX.Element => {
 		setAnchorEl(null);
 	};
 
+	const goHome = () => {
+		window.location.reload();
+	};
+
 	return (
 		<AppBar position="static">
 			<Toolbar className={classes.toolbar}>
-				<Typography variant="h6">책을 읽읍시다</Typography>
+				<Typography variant="h6" onClick={goHome}>
+					책을 읽읍시다
+				</Typography>
 				<div className={classes.menuBox}>
 					<ThemeProvider theme={theme}>
 						<IconButton aria-haspopup="true" onClick={handleMenu} color="inherit">

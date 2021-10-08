@@ -17,19 +17,6 @@ class UserInfo {
 	imageUrl = '';
 	loggedIn = false;
 
-	get userGivenName(): string {
-		return this.givenName;
-	}
-	get userName(): string {
-		return this.name;
-	}
-	get isLoggedIn(): boolean {
-		const sessionInfo = sessionStorage.getItem('login_session');
-		if (sessionInfo) {
-			this.login(JSON.parse(sessionInfo));
-		}
-		return this.loggedIn;
-	}
 	constructor(name: string) {
 		makeObservable(this, {
 			givenName: observable,
@@ -42,6 +29,20 @@ class UserInfo {
 			isLoggedIn: computed,
 		});
 		this.name = name;
+	}
+
+	get userGivenName(): string {
+		return this.givenName;
+	}
+	get userName(): string {
+		return this.name;
+	}
+	get isLoggedIn(): boolean {
+		const sessionInfo = sessionStorage.getItem('login_session');
+		if (sessionInfo) {
+			this.login(JSON.parse(sessionInfo));
+		}
+		return this.loggedIn;
 	}
 
 	login(props: Props) {

@@ -1,4 +1,5 @@
 import React, { Suspense, useEffect, useState } from 'react';
+import { observer } from 'mobx-react';
 import axios from 'axios';
 import { List, ListItem } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
@@ -34,18 +35,37 @@ const Main = (): JSX.Element => {
 	useEffect(() => {
 		const fetchBooKData = async () => {
 			const rBookData = await axios.get(`${process.env.REACT_APP_BOOK_URI}`);
-			setPageCount(Math.ceil(rBookData.data.length / 10));
-			setBookDatas(rBookData.data);
-		};
-		const { isbn: cdIsbn, _id: cdId } = commonState.willChangeData;
-		const fetchSingleBookData = async () => {
-			const rSingleBookData = await axios.get(
-				`${process.env.REACT_APP_BOOK_URI}?isbn=${cdIsbn}&_id=${cdId}`,
-			);
+			const borrowsData = await axios.get(`${process.env.REACT_APP_BORROW_URI}?distinct=true`);
 
+			/**
+			 * 대여정보 가져오기
+			 * 1. 원본도서에 해당하는 관리번호의 최신 대여정보가 존재하는가?
+			 * ? state가 done이면? 대여자 연구소로.: 대여자정보 표시
+			 * : 원본도서의 lender 출력
+			 */
+			const mergeData: any[] = [];
+			rBookData.data.forEach((bookData: any) => {
+				const _ = borrowsData.data.map((borrowsData: any) => {
+					if (bookData.isbn == borrowsData.isbn) {
+						if (borrowsData.state === 'DONE') {
+							bookData.lender = '연구소(보관)';
+						} else {
+							bookData.lender = borrowsData.lender;
+						}
+					}
+					return bookData;
+				});
+				mergeData.push(_[0]);
+			});
+
+			setPageCount(Math.ceil(rBookData.data.length / 10));
+			setBookDatas(mergeData);
+		};
+		const { isbn: cdIsbn, _id: cdId, lender: cdLender } = commonState.willChangeData;
+		const fetchSingleBookData = async () => {
 			bookDatas.forEach((_, i) => {
 				if (_._id == cdId) {
-					bookDatas[i] = rSingleBookData.data[0];
+					bookDatas[i].lender = cdLender;
 					return;
 				}
 			});
@@ -54,7 +74,19 @@ const Main = (): JSX.Element => {
 				return [...prev];
 			});
 
-			commonState.willChangeBook = { isbn: '', _id: '' };
+			if (isSearching) {
+				searchDatas.forEach((_, i) => {
+					if (_._id == cdId) {
+						searchDatas[i].lender = cdLender;
+						return;
+					}
+				});
+				setSearchDatas(prev => {
+					return [...prev];
+				});
+			}
+
+			commonState.willChangeBook = { isbn: '', _id: '', lender: '' };
 		};
 
 		if (cdIsbn != '') {
@@ -64,24 +96,22 @@ const Main = (): JSX.Element => {
 		}
 	}, [commonState.bookFetch]);
 
-	useEffect(() => {
-		if (isSearching) {
-			searchFunc(searchTxt);
-		}
-	}, [bookDatas]);
-
 	const pageChanged = (page: number) => {
 		setCurrentPage(page);
+	};
+
+	const setInitialValue = () => {
+		setSearchDatas(['']);
+		setIsSearching(false);
+		setSearchTxt('');
+		setCurrentPage(1);
+		setPageCount(Math.ceil(bookDatas.length / 10));
 	};
 
 	const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //특수문자
 	const searchFunc = (searchText: string) => {
 		if (searchText === '') {
-			setSearchDatas(['']);
-			setIsSearching(false);
-			setSearchTxt('');
-			setCurrentPage(1);
-			setPageCount(Math.ceil(bookDatas.length / 10));
+			setInitialValue();
 			return;
 		}
 
@@ -153,4 +183,4 @@ const Main = (): JSX.Element => {
 	);
 };
 
-export default Main;
+export default observer(Main);
