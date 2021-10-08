@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 		backgroundColor: theme.palette.background.paper,
 		border: '2px solid #000',
 		boxShadow: theme.shadows[5],
-		padding: theme.spacing(2, 4, 3),
+		padding: theme.spacing(2, 4, 2),
 	},
 	mySnakbar: {
 		marginTop: '100px',
@@ -94,7 +94,7 @@ const App = observer((): JSX.Element => {
 						<React.Fragment key={i}>
 							<ListSubheader classes={{ root: classes.subHeader }}>
 								<div>
-									<p style={{ float: 'left', width: 100, margin: 0 }}>대여자</p>
+									<p style={{ float: 'left', width: 110, margin: 0 }}>대여자</p>
 									<p style={{ float: 'left', margin: 0 }}>
 										{state === 'DONE' ? '반납일' : '대여일'}
 									</p>
@@ -153,11 +153,9 @@ const App = observer((): JSX.Element => {
 			<Modal className={classes.modal} open={modal.display} onClose={modalHandleClose}>
 				<div className={classes.paper}>
 					<h2 id="server-modal-title">{modal.modalTit}</h2>
-					<p id="server-modal-description">{modal.modalMsg}</p>
-
-					<List classes={{ root: classes.historyContainer }}>
-						{modal.modalCont.length != 0 && rentalHistory}
-					</List>
+					{modal.modalCont.length != 0 && (
+						<List classes={{ root: classes.historyContainer }}>{rentalHistory}</List>
+					)}
 				</div>
 			</Modal>
 			<AppRouter isLoggedIn={user.isLoggedIn}></AppRouter>
