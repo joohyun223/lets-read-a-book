@@ -23,7 +23,7 @@ const ddStyle = {
 	overflow: 'hidden',
 };
 const LENDER_DEFAULT = '연구소(보관)';
-const lenderStyle = { ...ddStyle, color: 'blue' };
+const lenderStyle = { ...ddStyle, color: '#4283b2' };
 const showHistory = (isbn: string) => {
 	axios.get(`${process.env.REACT_APP_BORROW_URI}?isbn=${isbn}`).then(res => {
 		//대여/반납기록 표시
@@ -119,7 +119,7 @@ const BookBox = (props: bProps): JSX.Element => {
 						color="primary"
 						className={`${classes.btn} ${classes.primary}`}
 					>
-						대여하기
+						대여
 					</Button>
 				) : (
 					<Button
@@ -127,7 +127,7 @@ const BookBox = (props: bProps): JSX.Element => {
 						color={lender === user.userName ? 'secondary' : 'primary'}
 						className={`${classes.btn}`}
 						style={
-							lender === user.userName ? { backgroundColor: '#feea' } : { backgroundColor: '#eeee' }
+							lender === user.userName ? { backgroundColor: '#fee' } : { backgroundColor: '#eeee' }
 						}
 						onClick={() => {
 							const returnRequest = axios.put(`${process.env.REACT_APP_RETURN_URI}`, {
@@ -157,7 +157,7 @@ const BookBox = (props: bProps): JSX.Element => {
 								});
 						}}
 					>
-						{lender === user.userName ? '반납하기' : '대여중'}
+						{lender === user.userName ? '반납' : '대여중'}
 					</Button>
 				)}
 			</Grid>

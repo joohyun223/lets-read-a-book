@@ -1,4 +1,4 @@
-import { observable, computed, makeObservable, action, ObservableMap } from 'mobx';
+import { observable, computed, makeObservable, action } from 'mobx';
 interface Props {
 	msg: string;
 	tit: string;
