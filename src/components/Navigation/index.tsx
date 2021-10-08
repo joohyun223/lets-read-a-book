@@ -30,7 +30,7 @@ const Navigation = (): JSX.Element => {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
-	const { signOut, loaded } = useGoogleLogout({
+	const { signOut } = useGoogleLogout({
 		clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID + '',
 		onLogoutSuccess: () => {
 			sessionStorage.removeItem('login_session');
