@@ -1,7 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import AppRouter from './components/Router';
-import { Modal, Backdrop, Snackbar } from '@material-ui/core';
+import {
+	Modal,
+	Backdrop,
+	Snackbar,
+	List,
+	ListItem,
+	ListItemText,
+	ListSubheader,
+} from '@material-ui/core';
 import { observer } from 'mobx-react';
 import user from './store/userInfo';
 import modal from './store/modalState';
@@ -17,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	paper: {
 		position: 'absolute',
-		width: 300,
+		width: 400,
 		backgroundColor: theme.palette.background.paper,
 		border: '2px solid #000',
 		boxShadow: theme.shadows[5],
@@ -30,7 +38,36 @@ const useStyles = makeStyles(theme => ({
 		zIndex: theme.zIndex.drawer + 1,
 		color: '#fff',
 	},
+	standardSuccess: {
+		backgroundColor: 'aliceblue',
+	},
+	standardError: {
+		backgroundColor: '#fee',
+	},
+	subHeader: {
+		backgroundColor: 'aliceblue',
+		overflow: 'auto',
+	},
+	historyContainer: {
+		overflow: 'auto',
+		maxHeight: 300,
+		paddingTop: 0,
+	},
 }));
+
+const historyItem = (data: any) => {
+	return (
+		<li key={`hitem-${data._id}`}>
+			<ListItem button>
+				<ListItemText style={{ width: 10 }}>{data.lender}</ListItemText>
+				<ListItemText>
+					{data.state === 'DONE' && `${data.returnTime}`}
+					{data.state === 'ING' && `${data.startTime}`}
+				</ListItemText>
+			</ListItem>
+		</li>
+	);
+};
 
 const App = observer((): JSX.Element => {
 	useEffect(() => {
@@ -45,14 +82,34 @@ const App = observer((): JSX.Element => {
 		modal.msg = '';
 	}, [modal]);
 
-	const history = useMemo(() => {
-		return modal.modalCont.map((data: any, i: number) => {
-			return (
-				<p key={i}>
-					대여자: {data.lender} &nbsp;&nbsp;
-					{data.state === 'DONE' ? `반납일: ${data.returnTime}` : `대여일: ${data.startTime}`}
-				</p>
-			);
+	const rentalHistory = useMemo(() => {
+		const rendRentalHistory = (state: string) => {
+			const stickyIdx = modal.modalCont.findIndex((_: any) => {
+				return _.state == state;
+			});
+			return modal.modalCont.map((data: any, i: number) => {
+				if (data.state != state) return;
+				if (stickyIdx === i) {
+					return (
+						<React.Fragment key={i}>
+							<ListSubheader classes={{ root: classes.subHeader }}>
+								<div>
+									<p style={{ float: 'left', width: 100, margin: 0 }}>대여자</p>
+									<p style={{ float: 'left', margin: 0 }}>
+										{state === 'DONE' ? '반납일' : '대여일'}
+									</p>
+								</div>
+							</ListSubheader>
+							{historyItem(data)}
+						</React.Fragment>
+					);
+				}
+				return historyItem(data);
+			});
+		};
+
+		return ['DONE', 'ING'].map((state: string) => {
+			return rendRentalHistory(state);
 		});
 	}, [modal.modalCont]);
 
@@ -70,7 +127,7 @@ const App = observer((): JSX.Element => {
 
 	return (
 		<div className="App">
-			<Backdrop className={classes.backdrop} open={alertOpen} onClick={alertClose}>
+			<Backdrop className={classes.backdrop} open={alertOpen}>
 				<Snackbar
 					className={classes.mySnakbar}
 					anchorOrigin={{
@@ -78,10 +135,12 @@ const App = observer((): JSX.Element => {
 						horizontal: 'center',
 					}}
 					open={alertOpen}
-					autoHideDuration={4000}
 				>
 					<Alert
-						style={{ backgroundColor: 'aliceblue' }}
+						classes={{
+							standardSuccess: classes.standardSuccess,
+							standardError: classes.standardError,
+						}}
 						onClose={alertClose}
 						severity={alert.alertSeverity}
 					>
@@ -96,7 +155,9 @@ const App = observer((): JSX.Element => {
 					<h2 id="server-modal-title">{modal.modalTit}</h2>
 					<p id="server-modal-description">{modal.modalMsg}</p>
 
-					<div style={{ fontSize: 12 }}>{history}</div>
+					<List classes={{ root: classes.historyContainer }}>
+						{modal.modalCont.length != 0 && rentalHistory}
+					</List>
 				</div>
 			</Modal>
 			<AppRouter isLoggedIn={user.isLoggedIn}></AppRouter>
