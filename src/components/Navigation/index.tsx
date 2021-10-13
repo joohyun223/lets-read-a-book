@@ -2,17 +2,22 @@ import { useState } from 'react';
 import { observer } from 'mobx-react';
 import user from '../../store/userInfo';
 import { AppBar, Toolbar, IconButton, Typography, Avatar, MenuItem, Menu } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 import {
 	makeStyles,
 	unstable_createMuiStrictModeTheme,
 	ThemeProvider,
 } from '@material-ui/core/styles';
-
 import { useGoogleLogout } from 'react-google-login';
+import TemporaryDrawer from '../Drawer';
 
 const theme = unstable_createMuiStrictModeTheme();
 
 const useStyles = makeStyles(() => ({
+	root: {
+		flexGrow: 1,
+	},
+
 	avatar: {
 		marginRight: '6px',
 		backgroundColor: 'green',
@@ -20,9 +25,13 @@ const useStyles = makeStyles(() => ({
 	menuBox: {
 		display: 'flex',
 	},
-	toolbar: {
-		display: 'flex',
-		justifyContent: 'space-between',
+	menuButton: {
+		marginRight: theme.spacing(2),
+	},
+
+	title: {
+		textAlign: 'left',
+		flexGrow: 1,
 	},
 }));
 
@@ -47,16 +56,17 @@ const Navigation = (): JSX.Element => {
 	};
 
 	const goHome = () => {
-		window.location.reload();
+		window.location.replace(window.location.origin);
 	};
 
 	return (
-		<AppBar position="static">
-			<Toolbar className={classes.toolbar}>
-				<Typography variant="h6" onClick={goHome}>
-					책을 읽읍시다
-				</Typography>
-				<div className={classes.menuBox}>
+		<div className={classes.root}>
+			<AppBar position="static">
+				<Toolbar>
+					<TemporaryDrawer />
+					<Typography className={classes.title} variant="h6" onClick={goHome}>
+						책을 읽읍시다
+					</Typography>
 					<ThemeProvider theme={theme}>
 						<IconButton aria-haspopup="true" onClick={handleMenu} color="inherit">
 							<Avatar className={classes.avatar} src={user.imageUrl} />
@@ -81,9 +91,9 @@ const Navigation = (): JSX.Element => {
 							<MenuItem onClick={signOut}>로그아웃</MenuItem>
 						</Menu>
 					</ThemeProvider>
-				</div>
-			</Toolbar>
-		</AppBar>
+				</Toolbar>
+			</AppBar>
+		</div>
 	);
 };
 
