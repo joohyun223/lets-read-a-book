@@ -1,12 +1,15 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import axios from 'axios';
-import { List, ListItem } from '@material-ui/core';
+import { List, ListItem, Fab } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { BookBoxSeleton } from '../../components/Skeleton';
 import SearchBox from '../../components/SearchBox';
 import { makeStyles } from '@material-ui/core/styles';
 import commonState from '../../store/commonState';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
+import Zoom from '@material-ui/core/Zoom';
 
 const useStyles = makeStyles(theme => ({
 	searchBox: {
@@ -21,7 +24,43 @@ const useStyles = makeStyles(theme => ({
 		display: 'flex',
 		justifyContent: 'center',
 	},
+	topBtn: { position: 'fixed', bottom: theme.spacing(2), right: theme.spacing(2) },
+	primary: {
+		backgroundColor: '#5e7fb9',
+	},
 }));
+
+interface Props {
+	window?: () => Window;
+	children: React.ReactElement;
+}
+function ScrollTop(props: Props) {
+	const { children, window } = props;
+	const classes = useStyles();
+	const trigger = useScrollTrigger({
+		target: window ? window() : undefined,
+		disableHysteresis: true,
+		threshold: 100,
+	});
+
+	const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+		const anchor = ((event.target as HTMLDivElement).ownerDocument || document).querySelector(
+			'#back-to-top-anchor',
+		);
+
+		if (anchor) {
+			anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+	};
+
+	return (
+		<Zoom in={trigger}>
+			<div onClick={handleClick} role="presentation" className={classes.topBtn}>
+				{children}
+			</div>
+		</Zoom>
+	);
+}
 
 const Main = (): JSX.Element => {
 	const BookBox = React.lazy(() => import('../../components/BookBox'));
@@ -134,15 +173,16 @@ const Main = (): JSX.Element => {
 		return;
 	};
 	const classes = useStyles();
+
 	return (
 		<>
+			<div id="back-to-top-anchor" />
 			<SearchBox className={classes.searchBox} goSearch={searchFunc} />
 			<Pagination
 				className={classes.pagination}
 				count={pageCount}
 				page={currentPage}
 				onChange={(evt, page) => pageChanged(page)}
-				color="primary"
 			/>
 			<div className={classes.contBox}>
 				<List>
@@ -175,10 +215,19 @@ const Main = (): JSX.Element => {
 			<Pagination
 				className={classes.pagination}
 				count={pageCount}
-				color="primary"
 				page={currentPage}
 				onChange={(evt, page) => pageChanged(page)}
 			/>
+			<ScrollTop>
+				<Fab
+					color="primary"
+					classes={{ primary: classes.primary }}
+					size="small"
+					aria-label="scroll back to top"
+				>
+					<KeyboardArrowUpIcon />
+				</Fab>
+			</ScrollTop>
 		</>
 	);
 };

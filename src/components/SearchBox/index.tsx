@@ -1,12 +1,22 @@
 import { TextField, Button } from '@material-ui/core';
 import { useRef } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 
 interface props {
 	goSearch: (args: string) => void;
 	style?: any;
 	className?: string;
 }
+
+const useStyles = makeStyles(theme => ({
+	contained: {
+		backgroundColor: '#5e7fb9',
+		borderColor: '#8392a0',
+		color: '#fff',
+	},
+}));
 export default function SearchBox(prop: props): JSX.Element {
+	const classes = useStyles();
 	const txtField = useRef<HTMLInputElement>(null);
 	const searchFunc = () => {
 		if (txtField.current != null) {
@@ -31,7 +41,7 @@ export default function SearchBox(prop: props): JSX.Element {
 				<Button
 					onClick={searchFunc}
 					variant="contained"
-					color="primary"
+					classes={{ contained: classes.contained }}
 					style={{ marginTop: '5px' }}
 				>
 					검색
