@@ -5,6 +5,7 @@ import { Paper, Button, Grid } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import modalState from '../../store/modalState';
 import clsx from 'clsx';
+import TopButton from '../../components/TopButton';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -175,22 +176,26 @@ const BestBook = (): JSX.Element => {
 	};
 
 	return (
-		<div>
-			<div className={classes.topContainer}>
-				<Typography variant="h5" align="left" style={{ color: 'white' }}>
-					인기도서 Top3
-				</Typography>
-				<div className={classes.paperContainer}>{renderTop3()}</div>
+		<>
+			<div>
+				<div id="back-to-top-anchor" />
+				<div className={classes.topContainer}>
+					<Typography variant="h5" align="left" style={{ color: 'white' }}>
+						인기도서 Top3
+					</Typography>
+					<div className={classes.paperContainer}>{renderTop3()}</div>
+				</div>
+				<section style={{ padding: '20px' }}>
+					<Typography variant="h5" align="left">
+						그 외 인기도서
+					</Typography>
+					<Grid container spacing={1} style={{ margin: '20px 0px' }}>
+						{renderOtherList()}
+					</Grid>
+				</section>
 			</div>
-			<section style={{ padding: '20px' }}>
-				<Typography variant="h5" align="left">
-					그 외 인기도서
-				</Typography>
-				<Grid container spacing={1} style={{ margin: '20px 0px' }}>
-					{renderOtherList()}
-				</Grid>
-			</section>
-		</div>
+			<TopButton />
+		</>
 	);
 };
 
