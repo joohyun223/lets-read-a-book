@@ -15,6 +15,16 @@ const useStyles = makeStyles({
 	fullList: {
 		width: 'auto',
 	},
+	drawerPaper: {
+		backgroundColor: '#353c49',
+	},
+	link: {
+		color: 'white',
+		textDecoration: 'none',
+	},
+	linkIcon: {
+		color: 'white',
+	},
 });
 
 export default function TemporaryDrawer() {
@@ -43,26 +53,26 @@ export default function TemporaryDrawer() {
 			onKeyDown={toggleDrawer(false)}
 		>
 			<List>
-				<Link to="/">
+				<Link to="/" className={classes.link}>
 					<ListItem button key="home">
-						<ListItemIcon>{<HomeIcon />}</ListItemIcon>
+						<ListItemIcon className={classes.linkIcon}>{<HomeIcon />}</ListItemIcon>
 						<ListItemText primary={'도서검색'} />
 					</ListItem>
 				</Link>
 
-				<Link to="/bestbook">
+				<Link to="/bestbook" className={classes.link}>
 					<ListItem button key="bestbook">
-						<ListItemIcon>{<FavoriteIcon />}</ListItemIcon>
+						<ListItemIcon className={classes.linkIcon}>{<FavoriteIcon />}</ListItemIcon>
 						<ListItemText primary={'인기도서'} />
 					</ListItem>
 				</Link>
 
-				<Link to="/">
-					<ListItem button key="bestpeople">
-						<ListItemIcon>{<EmojiPeopleIcon />}</ListItemIcon>
+				{/* <Link to="/bestperson" className={classes.link}>
+					<ListItem button key="bestperson">
+						<ListItemIcon className={classes.linkIcon}>{<EmojiPeopleIcon />}</ListItemIcon>
 						<ListItemText primary={'이달의 독서왕'} />
 					</ListItem>
-				</Link>
+				</Link> */}
 			</List>
 		</div>
 	);
@@ -72,7 +82,12 @@ export default function TemporaryDrawer() {
 			<IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
 				<MenuIcon />
 			</IconButton>
-			<Drawer anchor="left" open={state} onClose={toggleDrawer(false)}>
+			<Drawer
+				classes={{ paper: classes.drawerPaper }}
+				anchor="left"
+				open={state}
+				onClose={toggleDrawer(false)}
+			>
 				{list()}
 			</Drawer>
 		</React.Fragment>

@@ -24,7 +24,11 @@ const useStyles = makeStyles(theme => ({
 		display: 'flex',
 		justifyContent: 'center',
 	},
-	topBtn: { position: 'fixed', bottom: theme.spacing(2), right: theme.spacing(2) },
+	topBtn: {
+		position: 'fixed',
+		bottom: '30px',
+		right: '15%',
+	},
 	primary: {
 		backgroundColor: '#5e7fb9',
 	},

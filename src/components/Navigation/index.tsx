@@ -61,7 +61,7 @@ const Navigation = (): JSX.Element => {
 
 	return (
 		<div className={classes.root}>
-			<AppBar position="static" style={{ backgroundColor: 'rgb(42, 47, 55)' }}>
+			<AppBar position="static" style={{ backgroundColor: '#2a2f37' }}>
 				<Toolbar>
 					<TemporaryDrawer />
 					<Typography className={classes.title} variant="h6" onClick={goHome}>
