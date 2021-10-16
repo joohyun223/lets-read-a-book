@@ -8,6 +8,7 @@ import SearchBox from '../../components/SearchBox';
 import { makeStyles } from '@material-ui/core/styles';
 import commonState from '../../store/commonState';
 import TopButton from '../../components/TopButton';
+import TitleContainer from '../../components/TitleContainer';
 
 const useStyles = makeStyles(theme => ({
 	searchBox: {
@@ -138,6 +139,7 @@ const Main = (): JSX.Element => {
 
 	return (
 		<>
+			<TitleContainer title="도서검색" />
 			<div id="back-to-top-anchor" />
 			<SearchBox className={classes.searchBox} goSearch={searchFunc} />
 			<Pagination

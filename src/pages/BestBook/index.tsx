@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { Paper, Button, Grid } from '@material-ui/core';
@@ -6,14 +6,10 @@ import { Typography } from '@material-ui/core';
 import modalState from '../../store/modalState';
 import clsx from 'clsx';
 import TopButton from '../../components/TopButton';
+import TitleContainer from '../../components/TitleContainer';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		topContainer: {
-			background: 'url(/img/recommended_book_background.png)',
-			padding: '20px 20px',
-			minWidth: '840px',
-		},
 		paperRoot: {
 			backgroundColor: 'transparent',
 			boxShadow: 'none',
@@ -155,7 +151,7 @@ const BestBook = (): JSX.Element => {
 				<Grid item xs={12}>
 					<Paper classes={{ root: classes.otherPaperRoot }} key={i}>
 						<Grid container style={{ flexWrap: 'nowrap' }}>
-							<Grid item xs={2} style={{ minWidth: '150px' }}>
+							<Grid item xs={2} style={{ minWidth: '150px', maxWidth: '150px' }}>
 								<div>
 									{circle(data.cnt, 35)}
 									<img
@@ -208,12 +204,9 @@ const BestBook = (): JSX.Element => {
 		<>
 			<div>
 				<div id="back-to-top-anchor" />
-				<div className={classes.topContainer}>
-					<Typography variant="h5" align="left" style={{ color: 'white' }}>
-						인기도서 Top3
-					</Typography>
+				<TitleContainer title="인기도서 Top3">
 					<div className={classes.paperContainer}>{renderTop3()}</div>
-				</div>
+				</TitleContainer>
 				<section style={{ padding: '20px' }}>
 					<Typography variant="h5" align="left">
 						그 외 인기도서
