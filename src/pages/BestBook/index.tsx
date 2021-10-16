@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
 		topContainer: {
 			background: 'url(/img/recommended_book_background.png)',
 			padding: '20px 20px',
+			minWidth: '840px',
 		},
 		paperRoot: {
 			backgroundColor: 'transparent',
@@ -29,8 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
 			flexWrap: 'wrap',
 			margin: '10px 0px',
 			'& > *': {
-				margin: '0px 24px',
-				width: 210,
+				margin: '0px',
+				width: 260,
 			},
 		},
 		largeThumbnail: {
@@ -72,17 +73,21 @@ const BestBook = (): JSX.Element => {
 			setBookList(res.data);
 		});
 	}, []);
-	const circle = (cnt: number, width?: number) => {
+	const circle = (cnt: number, width?: number, style?: any) => {
 		return (
 			<div
-				style={{
-					position: 'relative',
-					float: 'left',
-					width: '100%',
-					height: '40px',
-					top: '20px',
-					left: '10px',
-				}}
+				style={
+					style
+						? style
+						: {
+								position: 'relative',
+								float: 'left',
+								width: '100%',
+								height: '40px',
+								top: '20px',
+								left: '10px',
+						  }
+				}
 			>
 				<div
 					style={{ width: width, height: width }}
@@ -108,14 +113,38 @@ const BestBook = (): JSX.Element => {
 	const renderTop3 = () => {
 		return bookList.slice(0, 3).map((data: any, i: number) => {
 			return (
-				<Paper classes={{ root: classes.paperRoot }} key={i}>
-					{circle(data.cnt)}
-					<img
-						className={classes.largeThumbnail}
-						src={data.poster ? data.poster : '/img/noimg.gif'}
-					></img>
-					<RendButton style={{ color: 'white' }} data={data} />
-				</Paper>
+				<>
+					<Paper classes={{ root: classes.paperRoot }} key={i}>
+						{circle(data.cnt, undefined, {
+							position: 'relative',
+							float: 'left',
+							width: '100%',
+							height: '40px',
+							top: '20px',
+							left: '35px',
+						})}
+						<img
+							className={classes.largeThumbnail}
+							src={data.poster ? data.poster : '/img/noimg.gif'}
+						></img>
+						<div style={{ display: 'flex', margin: '10px 32px 0px 0px', justifyContent: 'center' }}>
+							<Typography
+								variant="h5"
+								align="right"
+								style={{
+									width: 'fit',
+									alignItems: 'center',
+									display: 'flex',
+									margin: '0px 15px 0px 0px',
+									color: 'white',
+								}}
+							>
+								{i + 1}
+							</Typography>
+							<RendButton style={{ color: 'white', width: 'fit-content' }} data={data} />
+						</div>
+					</Paper>
+				</>
 			);
 		});
 	};
@@ -125,9 +154,9 @@ const BestBook = (): JSX.Element => {
 			return (
 				<Grid item xs={12}>
 					<Paper classes={{ root: classes.otherPaperRoot }} key={i}>
-						<Grid container>
-							<Grid item xs={2}>
-								<div style={{ width: '150px' }}>
+						<Grid container style={{ flexWrap: 'nowrap' }}>
+							<Grid item xs={2} style={{ minWidth: '150px' }}>
+								<div>
 									{circle(data.cnt, 35)}
 									<img
 										className={classes.thumbnail}
@@ -156,7 +185,7 @@ const BestBook = (): JSX.Element => {
 											justifyContent: 'right',
 										}}
 									>
-										{i + 1}
+										{i + 4}
 									</Typography>
 									<div>
 										<div style={{ textAlign: 'left', fontWeight: 700, marginBottom: '5px' }}>
@@ -190,7 +219,11 @@ const BestBook = (): JSX.Element => {
 						그 외 인기도서
 					</Typography>
 					<Grid container spacing={1} style={{ margin: '20px 0px' }}>
-						{renderOtherList()}
+						{bookList.length > 3 ? (
+							renderOtherList()
+						) : (
+							<div style={{ fontSize: '18px', color: 'gray' }}>인기도서가 존재하지 않습니다</div>
+						)}
 					</Grid>
 				</section>
 			</div>

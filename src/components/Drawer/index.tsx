@@ -67,12 +67,12 @@ export default function TemporaryDrawer() {
 					</ListItem>
 				</Link>
 
-				{/* <Link to="/bestperson" className={classes.link}>
+				<Link to="/bestperson" className={classes.link}>
 					<ListItem button key="bestperson">
 						<ListItemIcon className={classes.linkIcon}>{<EmojiPeopleIcon />}</ListItemIcon>
 						<ListItemText primary={'이달의 독서왕'} />
 					</ListItem>
-				</Link> */}
+				</Link>
 			</List>
 		</div>
 	);

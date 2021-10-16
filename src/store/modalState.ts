@@ -2,7 +2,7 @@ import { observable, computed, makeObservable, action } from 'mobx';
 interface Props {
 	msg?: string;
 	tit: string;
-	cont: any;
+	cont?: any;
 	display?: boolean;
 }
 

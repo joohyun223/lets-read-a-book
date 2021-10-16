@@ -147,7 +147,7 @@ const Main = (): JSX.Element => {
 				onChange={(evt, page) => pageChanged(page)}
 			/>
 			<div className={classes.contBox}>
-				<List>
+				<List style={{ width: '800px', minWidth: '400px' }}>
 					{searchDatas.length === 0 ? (
 						<div>검색 결과가 없습니다 :(</div>
 					) : (

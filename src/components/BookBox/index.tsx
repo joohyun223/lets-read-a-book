@@ -47,12 +47,12 @@ const BookBox = (props: bProps): JSX.Element => {
 	const [lender, setLender] = useState(props.lender);
 	const classes = useStyles();
 	return (
-		<Grid container direction="row" spacing={3}>
+		<Grid container direction="row" spacing={3} style={{ flexWrap: 'nowrap' }}>
 			<Grid item xs={1}>
 				{props.num}.
 			</Grid>
 
-			<Grid item xs={2} className="Thumb">
+			<Grid item xs={2} className="Thumb" style={{ minWidth: '102px' }}>
 				<img
 					style={{ width: '82px', height: '105px' }}
 					src={props.poster || process.env.PUBLIC_URL + '/img/noimg.gif'}
@@ -77,7 +77,7 @@ const BookBox = (props: bProps): JSX.Element => {
 				</dd>
 				<dd style={lenderStyle}>대여자: {props.lender}</dd>
 			</Grid>
-			<Grid item xs={2}>
+			<Grid item xs={2} style={{ display: 'flex', justifyContent: 'right' }}>
 				{/* 대여가능/대여불가/반납/연장 구분하기 */}
 				{props.isLost ? (
 					<Button className={classes.btn} style={{ backgroundColor: '#eeee' }} disabled>
