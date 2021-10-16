@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { observer } from 'mobx-react';
 import user from '../../store/userInfo';
 import { AppBar, Toolbar, IconButton, Typography, Avatar, MenuItem, Menu } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import {
 	makeStyles,
 	unstable_createMuiStrictModeTheme,
@@ -10,6 +9,10 @@ import {
 } from '@material-ui/core/styles';
 import { useGoogleLogout } from 'react-google-login';
 import TemporaryDrawer from '../Drawer';
+import ListItem from '@material-ui/core/ListItem';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const theme = unstable_createMuiStrictModeTheme();
 
@@ -88,7 +91,15 @@ const Navigation = (): JSX.Element => {
 								horizontal: 'center',
 							}}
 						>
-							<MenuItem onClick={signOut}>로그아웃</MenuItem>
+							<ListItem>
+								<span style={{ fontSize: '8px' }}>{user.email}</span>
+							</ListItem>
+							<MenuItem onClick={signOut}>
+								<ListItemIcon style={{ minWidth: '40px' }}>
+									<ExitToAppIcon fontSize="small" />
+								</ListItemIcon>
+								<ListItemText primary="로그아웃" />
+							</MenuItem>
 						</Menu>
 					</ThemeProvider>
 				</Toolbar>
