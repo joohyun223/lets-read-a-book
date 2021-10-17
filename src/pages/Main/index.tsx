@@ -38,14 +38,13 @@ const Main = (): JSX.Element => {
 		const fetchBooKData = async () => {
 			const rBookData = await axios.get(`${process.env.REACT_APP_BOOK_URI}`);
 			const borrowsData = await axios.get(`${process.env.REACT_APP_BORROW_URI}?distinct=true`);
-
 			/**
 			 * 대여정보 가져오기
 			 * 1. 원본도서에 해당하는 관리번호의 최신 대여정보가 존재하는가?
 			 * ? state가 done이면? 대여자 연구소로.: 대여자정보 표시
 			 * : 원본도서의 lender 출력
 			 */
-			const mergeData: any[] = [];
+			let mergeData: any[] = [];
 			rBookData.data.forEach((bookData: any) => {
 				const _ = borrowsData.data.map((borrowsData: any) => {
 					if (bookData.isbn == borrowsData.isbn) {
@@ -57,9 +56,8 @@ const Main = (): JSX.Element => {
 					}
 					return bookData;
 				});
-				mergeData.push(_[0]);
+				_.length ? mergeData.push(_[0]) : (mergeData = rBookData.data);
 			});
-
 			setPageCount(Math.ceil(rBookData.data.length / 10));
 			setBookDatas(mergeData);
 		};

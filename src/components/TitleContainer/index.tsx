@@ -12,7 +12,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function TitleContainer(props: any) {
 	const classes = useStyles();
-	console.log('tet', props);
 	return (
 		<div className={classes.topContainer}>
 			<Typography variant="h5" align="left">

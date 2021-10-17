@@ -91,6 +91,7 @@ const BookBox = (props: bProps): JSX.Element => {
 								isbn: props.isbn,
 								gId: user.id,
 								lender: user.userName,
+								email: user.email,
 							});
 							rentRequest
 								.then(() => {
