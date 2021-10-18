@@ -7,11 +7,12 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		paperContainer: {
+			overflowX: 'scroll',
 			position: 'relative',
 			display: 'flex',
-			justifyContent: 'center',
 			flexWrap: 'nowrap',
-			margin: '40px 0px 20px 0px',
+			padding: '10px 0px',
+			margin: '30px 0px 10px 0px',
 			'& > *': {
 				margin: '0px 20px',
 				width: 180,
@@ -56,44 +57,45 @@ const BestPerson = () => {
 					>
 						{props.date.replace('-', '년 ')}월의 독서왕
 					</Typography>
-
-					<div className={classes.paperContainer}>
-						{props.data[0]
-							.sort((prev: any, next: any) => {
-								return next.rendCnt - prev.rendCnt;
-							})
-							.map((rData: any, i: number) => {
-								return (
-									<Paper
-										key={i}
-										style={{
-											borderRadius: '20px',
-											height: '220px',
-											padding: '20px 0px',
-											boxSizing: 'border-box',
-											background: 'linear-gradient(180deg, transparent,transparent ,aliceblue)',
-										}}
-									>
-										<img
-											style={{ borderRadius: '100px', width: '120px', height: '120px' }}
-											src={rData.picture.length ? rData.picture : '/img/noimg.gif'}
-										></img>
-										<div
+					<div style={{ display: 'flex', justifyContent: 'center' }}>
+						<div className={classes.paperContainer}>
+							{props.data[0]
+								.sort((prev: any, next: any) => {
+									return next.rendCnt - prev.rendCnt;
+								})
+								.map((rData: any, i: number) => {
+									return (
+										<Paper
+											key={i}
 											style={{
-												display: 'flex',
-												marginTop: '25px',
-												justifyContent: 'center',
-												flexDirection: 'column',
+												borderRadius: '20px',
+												height: '220px',
+												padding: '20px 0px',
+												boxSizing: 'border-box',
+												background: 'linear-gradient(180deg, transparent,transparent ,aliceblue)',
 											}}
 										>
-											<span style={{ fontWeight: 700 }}>{rData.name}님</span>
-											<span style={{ fontSize: '14px', color: 'gray' }}>
-												{rData.rendCnt}번 대여하셨네요
-											</span>
-										</div>
-									</Paper>
-								);
-							})}
+											<img
+												style={{ borderRadius: '100px', width: '120px', height: '120px' }}
+												src={rData.picture.length ? rData.picture : '/img/noimg.gif'}
+											></img>
+											<div
+												style={{
+													display: 'flex',
+													marginTop: '25px',
+													justifyContent: 'center',
+													flexDirection: 'column',
+												}}
+											>
+												<span style={{ fontWeight: 700 }}>{rData.name}님</span>
+												<span style={{ fontSize: '14px', color: 'gray' }}>
+													{rData.rendCnt}번 대여하셨네요
+												</span>
+											</div>
+										</Paper>
+									);
+								})}
+						</div>
 					</div>
 				</div>
 			</div>

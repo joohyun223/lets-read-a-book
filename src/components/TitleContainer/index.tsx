@@ -6,7 +6,7 @@ const useStyles = makeStyles(theme => ({
 		color: 'white',
 		background: 'url(/img/recommended_book_background.png)',
 		padding: '20px 20px',
-		minWidth: '840px',
+		// minWidth: '840px',
 	},
 }));
 

@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 	pagination: {
 		display: 'flex',
 		justifyContent: 'center',
-		margin: '30px 30px',
+		margin: '30px 0px',
 	},
 	contBox: {
 		display: 'flex',
@@ -147,7 +147,7 @@ const Main = (): JSX.Element => {
 				onChange={(evt, page) => pageChanged(page)}
 			/>
 			<div className={classes.contBox}>
-				<List style={{ width: '800px', minWidth: '400px' }}>
+				<List style={{ width: '84%', minWidth: '360px', maxWidth: '840px' }}>
 					{searchDatas.length === 0 ? (
 						<div>검색 결과가 없습니다 :(</div>
 					) : (

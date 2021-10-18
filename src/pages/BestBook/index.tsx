@@ -20,13 +20,14 @@ const useStyles = makeStyles((theme: Theme) =>
 			borderBottom: '2px #e6e8eb solid',
 		},
 		paperContainer: {
+			overflowX: 'scroll',
 			position: 'relative',
 			display: 'flex',
-			justifyContent: 'center',
-			flexWrap: 'wrap',
+			flexWrap: 'nowrap',
 			margin: '10px 0px',
+			padding: '0px 30px',
 			'& > *': {
-				margin: '0px',
+				margin: '0px 10px',
 				width: 260,
 			},
 		},
@@ -137,7 +138,10 @@ const BestBook = (): JSX.Element => {
 							>
 								{i + 1}
 							</Typography>
-							<RendButton style={{ color: 'white', width: 'fit-content' }} data={data} />
+							<RendButton
+								style={{ color: 'white', width: 'fit-content', textAlign: 'center' }}
+								data={data}
+							/>
 						</div>
 					</Paper>
 				</>
@@ -205,7 +209,9 @@ const BestBook = (): JSX.Element => {
 			<div>
 				<div id="back-to-top-anchor" />
 				<TitleContainer title="인기도서 Top3">
-					<div className={classes.paperContainer}>{renderTop3()}</div>
+					<div style={{ display: 'flex', justifyContent: 'center' }}>
+						<div className={classes.paperContainer}>{renderTop3()}</div>
+					</div>
 				</TitleContainer>
 				<section style={{ padding: '20px' }}>
 					<Typography variant="h5" align="left">

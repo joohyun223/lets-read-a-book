@@ -41,6 +41,13 @@ const useStyles = makeStyles(theme => ({
 	primary: {
 		backgroundColor: 'aliceblue',
 	},
+	subLabel: {
+		display: 'inline-block',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+		width: '100%',
+	},
 }));
 
 const BookBox = (props: bProps): JSX.Element => {
@@ -48,7 +55,7 @@ const BookBox = (props: bProps): JSX.Element => {
 	const classes = useStyles();
 	return (
 		<Grid container direction="row" spacing={3} style={{ flexWrap: 'nowrap' }}>
-			<Grid item xs={1}>
+			<Grid item xs={1} style={{ padding: '0px 12px 0px 5px' }}>
 				{props.num}.
 			</Grid>
 
@@ -60,14 +67,15 @@ const BookBox = (props: bProps): JSX.Element => {
 				/>
 			</Grid>
 
-			<Grid item xs={7} className="bookDataWrap" style={{ width: '400px', textAlign: 'left' }}>
+			<Grid item xs={7} className="bookDataWrap" style={{ textAlign: 'left', width: '0px' }}>
 				<Button
-					style={{ padding: '0px', textAlign: 'start' }}
+					style={{ padding: '0px', textAlign: 'start', width: '100%' }}
 					size="medium"
 					className="book_title"
 					onClick={() => {
 						showHistory(props.isbn);
 					}}
+					classes={{ label: classes.subLabel }}
 				>
 					{props.sub}
 				</Button>
@@ -77,7 +85,7 @@ const BookBox = (props: bProps): JSX.Element => {
 				</dd>
 				<dd style={lenderStyle}>대여자: {props.lender}</dd>
 			</Grid>
-			<Grid item xs={2} style={{ display: 'flex', justifyContent: 'right' }}>
+			<Grid item xs={2} style={{ display: 'flex', justifyContent: 'center', marginRight: '5px' }}>
 				{/* 대여가능/대여불가/반납/연장 구분하기 */}
 				{props.isLost ? (
 					<Button className={classes.btn} style={{ backgroundColor: '#eeee' }} disabled>

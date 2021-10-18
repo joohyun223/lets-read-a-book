@@ -36,7 +36,7 @@ export default function SearchBox(prop: props): JSX.Element {
 					}}
 					id="standard-basic"
 					label="도서명 | ISBN | 대여자명 검색"
-					style={{ width: '600px' }}
+					style={{ width: '66%' }}
 				/>
 				<Button
 					onClick={searchFunc}
