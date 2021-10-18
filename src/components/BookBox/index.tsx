@@ -2,10 +2,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { Grid, Button } from '@material-ui/core';
 import user from '../../store/userInfo';
-import commonState from '../../store/commonState';
 import modalState from '../../store/modalState';
-import alertState from '../../store/alertState';
-import { useState } from 'react';
+import dialogState from '../../store/dialogState';
+
 interface bProps {
 	num: number;
 	sub: string;
@@ -51,7 +50,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const BookBox = (props: bProps): JSX.Element => {
-	const [lender, setLender] = useState(props.lender);
 	const classes = useStyles();
 	return (
 		<Grid container direction="row" spacing={3} style={{ flexWrap: 'nowrap' }}>
@@ -91,39 +89,21 @@ const BookBox = (props: bProps): JSX.Element => {
 					<Button className={classes.btn} style={{ backgroundColor: '#eeee' }} disabled>
 						분실
 					</Button>
-				) : lender === LENDER_DEFAULT ? (
+				) : props.lender === LENDER_DEFAULT ? (
 					<Button
 						onClick={() => {
-							// 대여정보 create
-							const rentRequest = axios.post(`${process.env.REACT_APP_BORROW_URI}/book`, {
-								isbn: props.isbn,
-								gId: user.id,
-								lender: user.userName,
-								email: user.email,
+							dialogState.showDialog({
+								msg: `${props.sub}을/를 대여하시겠습니까?`,
+								type: 'rent',
+								data: {
+									bookName: props.sub,
+									isbn: props.isbn,
+									gId: user.id,
+									lender: user.userName,
+									email: user.email,
+									_id: props._id,
+								},
 							});
-							rentRequest
-								.then(() => {
-									commonState.willChangeBook = {
-										isbn: props.isbn,
-										_id: props._id,
-										lender: user.userName,
-									};
-									commonState.bookListUpdate = !commonState.bookListUpdate;
-									setLender(user.userName);
-									alertState.showAlert({
-										tit: '대여되었습니다',
-										msg: '해당 도서를 10층 보관소에서 가져가시면 됩니다.',
-										severity: 'success',
-									});
-								})
-								.catch(err => {
-									alertState.showAlert({
-										tit: '대여 할 수 없습니다',
-										msg: '이미 대여 된 도서입니다.',
-										severity: 'error',
-									});
-									console.error('err', err);
-								});
 						}}
 						color="primary"
 						className={`${classes.btn} ${classes.primary}`}
@@ -132,41 +112,30 @@ const BookBox = (props: bProps): JSX.Element => {
 					</Button>
 				) : (
 					<Button
-						disabled={lender === user.userName ? false : true}
-						color={lender === user.userName ? 'secondary' : 'primary'}
+						disabled={props.lender === user.userName ? false : true}
+						color={props.lender === user.userName ? 'secondary' : 'primary'}
 						className={`${classes.btn}`}
 						style={
-							lender === user.userName ? { backgroundColor: '#fee' } : { backgroundColor: '#eeee' }
+							props.lender === user.userName
+								? { backgroundColor: '#fee' }
+								: { backgroundColor: '#eeee' }
 						}
 						onClick={() => {
-							const returnRequest = axios.put(`${process.env.REACT_APP_RETURN_URI}`, {
-								isbn: props.isbn,
-								gId: user.id,
-								lender: user.name,
+							dialogState.showDialog({
+								msg: `${props.sub}을/를 반납하시겠습니까?`,
+								type: 'return',
+								data: {
+									bookName: props.sub,
+									isbn: props.isbn,
+									gId: user.id,
+									lender: user.name,
+									email: user.email,
+									_id: props._id,
+								},
 							});
-
-							returnRequest
-								.then(() => {
-									commonState.willChangeBook = {
-										isbn: props.isbn,
-										_id: props._id,
-										lender: LENDER_DEFAULT,
-									};
-									commonState.bookListUpdate = !commonState.bookListUpdate;
-
-									setLender(LENDER_DEFAULT);
-									alertState.showAlert({
-										tit: '반납되었습니다',
-										msg: '해당 도서를 10층 보관소에 반납해 주세요.',
-										severity: 'success',
-									});
-								})
-								.catch(err => {
-									console.error('err', err);
-								});
 						}}
 					>
-						{lender === user.userName ? '반납' : '대여중'}
+						{props.lender === user.userName ? '반납' : '대여중'}
 					</Button>
 				)}
 			</Grid>

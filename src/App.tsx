@@ -16,6 +16,8 @@ import modal from './store/modalState';
 import alert from './store/alertState';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
+import Dialog from './components/Dialog';
+import dialogState from './store/dialogState';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
@@ -127,6 +129,10 @@ const App = observer((): JSX.Element => {
 		setAlertOpen(false);
 	};
 
+	useEffect(() => {
+		console.log('');
+	}, [dialogState.isDisplay]);
+
 	return (
 		<div className="App">
 			<Backdrop className={classes.backdrop} open={alertOpen}>
@@ -160,6 +166,7 @@ const App = observer((): JSX.Element => {
 					)}
 				</div>
 			</Modal>
+			<Dialog />
 			<AppRouter isLoggedIn={user.isLoggedIn}></AppRouter>
 		</div>
 	);

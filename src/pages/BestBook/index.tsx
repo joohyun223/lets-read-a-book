@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		paperContainer: {
 			overflowX: 'scroll',
+			overflowY: 'hidden',
 			position: 'relative',
 			display: 'flex',
 			flexWrap: 'nowrap',
@@ -59,6 +60,9 @@ const useStyles = makeStyles((theme: Theme) =>
 			textAlign: 'left',
 			padding: '0px',
 		},
+		subLabel: {
+			height: '70px',
+		},
 	}),
 );
 
@@ -79,10 +83,10 @@ const BestBook = (): JSX.Element => {
 						: {
 								position: 'relative',
 								float: 'left',
+								left: '10px',
 								width: '100%',
 								height: '40px',
 								top: '20px',
-								left: '10px',
 						  }
 				}
 			>
@@ -97,12 +101,9 @@ const BestBook = (): JSX.Element => {
 		);
 	};
 	function RendButton(props: any) {
-		const { data, style } = props;
-		const rendEvt = () => {
-			console.log('test', data.name);
-		};
+		const { data, style, labelStyle } = props;
 		return (
-			<Button onClick={rendEvt} className={classes.rendBtn} style={style}>
+			<Button classes={{ label: labelStyle }} className={classes.rendBtn} style={style}>
 				{data.name}
 			</Button>
 		);
@@ -110,11 +111,12 @@ const BestBook = (): JSX.Element => {
 	const renderTop3 = () => {
 		return bookList.slice(0, 3).map((data: any, i: number) => {
 			return (
-				<div style={{ minWidth: '180px', maxWidth: '200px' }}>
-					<Paper classes={{ root: classes.paperRoot }} key={i}>
+				<div style={{ minWidth: '260px', maxWidth: '260px' }} key={i}>
+					<Paper classes={{ root: classes.paperRoot }}>
 						{circle(data.cnt, undefined, {
 							position: 'relative',
 							float: 'left',
+							left: '30px',
 							width: '100%',
 							height: '40px',
 							top: '20px',
@@ -138,6 +140,7 @@ const BestBook = (): JSX.Element => {
 								{i + 1}
 							</Typography>
 							<RendButton
+								labelStyle={classes.subLabel}
 								style={{ color: 'white', width: 'fit-content', textAlign: 'center' }}
 								data={data}
 							/>
@@ -151,8 +154,8 @@ const BestBook = (): JSX.Element => {
 	const renderOtherList = () => {
 		return bookList.slice(3, 13).map((data: any, i: number) => {
 			return (
-				<Grid item xs={12}>
-					<Paper classes={{ root: classes.otherPaperRoot }} key={i}>
+				<Grid item xs={12} key={i}>
+					<Paper classes={{ root: classes.otherPaperRoot }}>
 						<Grid container style={{ flexWrap: 'nowrap' }}>
 							<Grid item xs={2} style={{ minWidth: '150px', maxWidth: '150px' }}>
 								<div>
