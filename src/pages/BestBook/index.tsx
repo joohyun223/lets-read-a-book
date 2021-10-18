@@ -110,7 +110,7 @@ const BestBook = (): JSX.Element => {
 	const renderTop3 = () => {
 		return bookList.slice(0, 3).map((data: any, i: number) => {
 			return (
-				<>
+				<div style={{ minWidth: '180px', maxWidth: '200px' }}>
 					<Paper classes={{ root: classes.paperRoot }} key={i}>
 						{circle(data.cnt, undefined, {
 							position: 'relative',
@@ -118,7 +118,6 @@ const BestBook = (): JSX.Element => {
 							width: '100%',
 							height: '40px',
 							top: '20px',
-							left: '35px',
 						})}
 						<img
 							className={classes.largeThumbnail}
@@ -144,7 +143,7 @@ const BestBook = (): JSX.Element => {
 							/>
 						</div>
 					</Paper>
-				</>
+				</div>
 			);
 		});
 	};
