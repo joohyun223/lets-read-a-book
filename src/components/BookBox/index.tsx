@@ -84,7 +84,7 @@ const BookBox = (props: bProps): JSX.Element => {
 				<dd style={lenderStyle}>대여자: {props.lender}</dd>
 			</Grid>
 			<Grid item xs={2} style={{ display: 'flex', justifyContent: 'center', marginRight: '5px' }}>
-				{/* 대여가능/대여불가/반납/연장 구분하기 */}
+				{/* 대여가능/대여불가/반납/연장 구분하기  */}
 				{props.isLost ? (
 					<Button className={classes.btn} style={{ backgroundColor: '#eeee' }} disabled>
 						분실
