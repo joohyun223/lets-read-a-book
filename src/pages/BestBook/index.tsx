@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			borderBottom: '2px #e6e8eb solid',
 		},
 		paperContainer: {
-			overflowX: 'scroll',
+			overflowX: 'hidden',
 			overflowY: 'hidden',
 			position: 'relative',
 			display: 'flex',

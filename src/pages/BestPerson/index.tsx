@@ -7,7 +7,7 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		paperContainer: {
-			overflowX: 'scroll',
+			overflowX: 'hidden',
 			position: 'relative',
 			display: 'flex',
 			flexWrap: 'nowrap',
